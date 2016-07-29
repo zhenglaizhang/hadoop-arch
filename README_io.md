@@ -24,3 +24,12 @@
     * `FileSystem.setVerifyChecksum()`
     * `hdfs dfs -get -ignoreCrc ...`
 * `hadoop fs -checksum` to check if 2 files are of same content, which `distcp` does
+
+
+
+## Compression
+
+* `bzip2` are splitable
+* `LZO` files are splittable if they have been indexed in a preprocessing step
+* **Splitable**: the compression format supports splitting (that is, whether you can seek to any point in the stream and start reading from some point further on)
+* A **codec** is the implementation of a compression-decompression algorithm
