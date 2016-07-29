@@ -44,3 +44,25 @@ A request for a set of containers can express the amount of computer resources r
         * When the second (small) job starts, it is allocated half of the cluster resources so that each job is using its fair share of resources.
     * a lag between the time the second job starts and when it receives its fair share
     * The overall effect is both high cluster utilization and timely small job completion.
+    
+![](.README-yarn_images/scheduling_yarn.png)
+
+
+
+
+### Delay Scheduling
+
+* All the YARN schedulers try to honor **locality requests**
+* However, it has been observed in practice that waiting a short time (no more than a few seconds) can dramatically increase the chances of being allocated a container on the requested node, and therefore increase the efficiency of the cluster
+* delay scheduling, and it is supported by both the Capacity Scheduler and the Fair Scheduler
+
+* Every node manager in a YARN cluster periodically sends a heartbeat request to the resource manager—by default, one per second. Heartbeats carry information about the node manager’s running containers and the resources available for new containers, so each heartbeat is a potential scheduling opportunity for an application to run a container.
+* When using delay scheduling, the scheduler doesn’t simply use the first scheduling opportunity it receives, but _waits for up to a given maximum number of scheduling opportunities to occur before loosening the locality constraint and taking the next scheduling opportunity._
+* `yarn.scheduler.capacity.node-locality-delay` and ``
+
+
+### Dominant Resource Fairness
+
+* YARN address allocation fairness problem is to look at **each user’s dominant resource and use it as a measure of the cluster usage**. This approach is called Dominant Resource Fairness, or DRF for short
+* memory is dominant since its proportion (3%) is larger than CPU’s (2%) ?
+* By default DRF is not used, so during resource calculations, only memory is considered and CPU is ignored
