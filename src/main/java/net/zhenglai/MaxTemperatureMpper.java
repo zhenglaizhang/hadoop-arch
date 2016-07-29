@@ -29,7 +29,6 @@ public class MaxTemperatureMpper
 
         String quality = line.substring(92, 93);
         if (airTemperature != MISSING && quality.matches("[01459]")) {
-            System.out.println("Mapping: " + year + " => " + airTemperature);
             context.write(new Text(year), new IntWritable(airTemperature));
         }
     }

@@ -30,6 +30,9 @@ public class MaxTemperature {
         job.setMapperClass(MaxTemperatureMpper.class);
         job.setReducerClass(MaxTemperatureReducer.class);
 
+        // combiner is the same as reducer here
+        job.setCombinerClass(MaxTemperatureReducer.class);
+
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 

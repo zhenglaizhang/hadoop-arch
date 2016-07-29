@@ -16,7 +16,7 @@ public class MaxTemperatureReducer
 
     @Override
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
-        Stream<IntWritable> streams = Streams.streamOf(values);
+//        Stream<IntWritable> streams = Streams.streamOf(values);
 //        IntWritable max = streams.reduce((a, b) -> a.get() >= b.get() ? a : b).get();
 
         int max = Integer.MIN_VALUE;
