@@ -126,3 +126,37 @@ hadoop fs -ls hdfs:///
 hadoop fs -ls file:///
 ```
 It's possible (and sometimes very convenient) to run MapReduce programs that access any of these filesystems, but for large data set, the distributed HDFS is much better
+
+
+### Read flow
+
+* `DistributedFileSystem` and `FSDataInputStream`
+* the client contacts datanodes directly to retrieve data and is guided by the namenode to the best datanode for each block
+* the data traffic is spread across all the datanodes in the cluster
+* the namenode merely has to service block location requests (which it stores in memory, making them very efficient) and does not
+
+### Write flow
+* `DistributedFileSystem` and `FSDataOutputStream`
+* `FSDataOutputStream` wraps a `DFSOutputStream`, which handles communication with the datanodes and namenode
+* data queue is consumed by `DataStreamer`
+* The list of datanodes forms a pipeline of size of replication factor
+* ack queue
+* As long as `dfs.namenode.replication.min` replicas (which defaults to 1) are written, the write will succeed
+* Namenode finally waits for blocks to be minimally replicated before returning successfully
+
+this strategy gives a good balance among reliability (blocks are stored on two racks), write bandwidth (writes only have to traverse a single network switch), read performance (there’s a choice of two racks to read from), and block distribution across the cluster (clients only write a single block on the local rack).
+
+
+### Replica placement
+
+* There’s a tradeoff between reliability(redundancy) and write bandwidth and read bandwidth here.
+* Hadoop’s default strategy is to place the first replica on the same node as the client (for clients running outside the cluster, a node is chosen at random, although the system tries not to pick nodes that are too full or too busy
+* The second replica is placed on a different rack from the first (off-rack), chosen at random. 
+* The third replica is placed on the same rack as the second, but on a different node chosen at random. 
+* Further replicas are placed on random nodes in the cluster, although the system tries to avoid placing too many replicas on the same rack.
+* Once the replica locations have been chosen, a pipeline is built
+
+### Network topolicy
+
+* Hadoop takes a simple approach in which the network is represented as a tree and the distance between two nodes is the sum of their distances to their closest common ancestor.
+* By default, though, it assumes that the network is flat—a singlelevel hierarchy 
