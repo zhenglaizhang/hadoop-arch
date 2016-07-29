@@ -33,3 +33,21 @@
 * `LZO` files are splittable if they have been indexed in a preprocessing step
 * **Splitable**: the compression format supports splitting (that is, whether you can seek to any point in the stream and start reading from some point further on)
 * A **codec** is the implementation of a compression-decompression algorithm
+
+
+
+* MapReduce will do the right thing and not try to split the gzipped file
+* This will work, but at the expense of locality: a single map will process the eight HDFS blocks, most of which will not be local to the map.
+* it is possible to preprocess LZO files using an indexer tool that comes with the Hadoop LZO libraries
+* if your input files are compressed, they will be decompressed automatically as they are read by MapReduce, using the filename extension to determine which codec to use.
+
+
+* For sequence file compression type, The default is RECORD, which compresses individual records. Changing this to BLOCK, which compresses groups of records, is recommended because it compresses better
+
+
+
+## Serialization
+
+* In Hadoop, interprocess communication between nodes in the system is implemented using remote procedure calls (RPCs).
+* Hadoop uses its own serialization format, `Writables`, which is certainly compact and fast, but not so easy to extend or use from languages other than Java
+* Avro (a serialization system that was designed to overcome some of the limitations of Writables)

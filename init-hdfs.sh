@@ -10,6 +10,7 @@ hdfs dfs -mkdir -p /data/ncdc
 
 hdfs dfs -put 1901 /data/ncdc
 hdfs dfs -put 1902 /data/ncdc
+hdfs dfs -put 1901.gz /data/ncdc/
 
 hdfs dfs -cat /data/ncdc/1901
 
