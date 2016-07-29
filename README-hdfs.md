@@ -53,6 +53,7 @@ hdfs fsck / -files -blocks
 * secondary namenode, which despite its name does not act as a namenode. Its main role is to periodically merge the namespace image with the edit log to prevent the edit log from becoming too large.
 * The usual course of action in this case is to copy the namenode’s metadata files that are on NFS to the secondary and run it as the new
   primary. (Note that it is possible to run a hot standby namenode instead of a secondary
+* directories are treated as metadata and stored by the namenode, not the datanodes
 
 #### Datanode
 * They store and retrieve blocks when
@@ -116,3 +117,12 @@ Hadoop 2 remedied this situation by adding support for HDFS high availability (H
 * The QJM only allows one namenode to write to the edit log at one time
 
 Client failover: The HDFS URI uses a logical hostname that is mapped to a pair of namenode addresses (in the configuration file), and the client library tries each namenode address until the operation succeeds.
+
+
+Compare output of following to see hdfs implementations
+
+```bash
+hadoop fs -ls hdfs:///
+hadoop fs -ls file:///
+```
+It's possible (and sometimes very convenient) to run MapReduce programs that access any of these filesystems, but for large data set, the distributed HDFS is much better

@@ -25,6 +25,7 @@ buildNumber.properties
 
 ncdc/output/
 */*.DS_Store
+.DS_Store
 
 .idea/*
 *.iml
