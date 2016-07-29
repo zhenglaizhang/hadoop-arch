@@ -178,3 +178,14 @@ this strategy gives a good balance among reliability (blocks are stored on two r
 * With no calls to hflush() or hsync(), you should be prepared to lose up to a block of data in the event of client or system failure.
 * For many applications, this is unacceptable, so you should call hflush() at suitable points, such as after writing a certain number of records or number of bytes.
 * suitable values can be selected after measuring your application’s performance with different hflush() (or hsync()) frequencies
+
+
+### Keeping an HDFS Cluster Balanced
+
+* if you specified -m 1, a single map would do the copy, which—apart from being slow and not using the cluster resources efficiently— would mean that the first replica of each block would reside on the node running the map (until the disk filled up).
+* By having more maps than nodes in the cluster, this problem is avoided. For this reason, it’s best to start by running distcp with the default of 20 maps per node.
+* you can use the balancer tool to subsequently even out the block distribution across the cluster.
+
+```bash
+hdfs balancer
+```
