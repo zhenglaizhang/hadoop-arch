@@ -27,3 +27,6 @@ ncdc/output/
 */*.DS_Store
 
 .idea/*
+*.iml
+
+out/*
