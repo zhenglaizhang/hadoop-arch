@@ -160,3 +160,21 @@ this strategy gives a good balance among reliability (blocks are stored on two r
 
 * Hadoop takes a simple approach in which the network is represented as a tree and the distance between two nodes is the sum of their distances to their closest common ancestor.
 * By default, though, it assumes that the network is flat—a singlelevel hierarchy 
+
+### Coherency model
+
+* A coherency model for a filesystem describes the data visibility of reads and writes for a file. HDFS trades off some POSIX requirements for performance, so some operations
+  may behave
+* After creating a file, it is visible in the filesystem namespace 
+* However, any content written to the file is not guaranteed to be visible, even if the stream is flushed
+* Once more than a block’s worth of data has been written, the first block will be visible to new readers
+* it is always the current block being written that is not visible to other readers.
+* HDFS provides a way to force all buffers to be flushed to the datanodes via the hflush() method on FSDataOutputStream.
+* Note that hflush() does not guarantee that the datanodes have written the data to disk, only that it’s in the datanodes’ memory
+* For this stronger guarantee, use hsync() instead.
+* Closing a file in HDFS performs an implicit hflush(), too:
+
+
+* With no calls to hflush() or hsync(), you should be prepared to lose up to a block of data in the event of client or system failure.
+* For many applications, this is unacceptable, so you should call hflush() at suitable points, such as after writing a certain number of records or number of bytes.
+* suitable values can be selected after measuring your application’s performance with different hflush() (or hsync()) frequencies
