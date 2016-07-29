@@ -34,3 +34,10 @@ hadoop fs -mkdir books
 hadoop fs -ls .
 
 # The second column is the replication factor of the file
+
+
+# checksum
+hadoop fs -checksum /data/ncdc/1901
+# 16/07/29 22:12:24 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using
+# builtin-java classes where applicable
+# /data/ncdc/1901 MD5-of-0MD5-of-512CRC32C        000002000000000000000000a35b0f71f7c5fbaebfc63e694f4fc516
