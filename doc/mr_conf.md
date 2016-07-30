@@ -10,3 +10,4 @@
     * Configuration properties can be defined in terms of other properties, or system properties.
     * System properties take priority over properties defined in resource files:
     * useful for overriding properties on the command line by using `-Dproperty=value` JVM arguments.
+* JVM system properties are retrieved from the java.lang.System class, but Hadoop properties are accessible only from a Configuration object.
