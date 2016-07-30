@@ -31,3 +31,5 @@ ncdc/output/
 *.iml
 
 out/*
+
+build/
