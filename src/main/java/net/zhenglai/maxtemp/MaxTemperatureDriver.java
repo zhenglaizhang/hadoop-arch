@@ -12,20 +12,20 @@ import org.apache.hadoop.util.ToolRunner;
 
 /**
  * Created by Zhenglai on 7/30/16.
- *
- *
+ * <p>
+ * <p>
  * Run
- *      hadoop net.zhenglai.maxtemp.MaxTemperatureDriver -conf etc/develop/hadoop-local.xml input/ncdc/1901 /tmp/output01
- *      cat /tmp/output01/part-r-00000
- *    or
- *      hadoop net.zhenglai.maxtemp.MaxTemperatureDriver -fs file:/// -jt local input/ncdc/1901 /tmp/output02
- *    or input as one dir
- *      hadoop net.zhenglai.maxtemp.MaxTemperatureDriver -fs file:/// -jt local input/ncdc/micro /tmp/output04
- *
- *      hadoop-arch [master●●] % cat /tmp/output04/part-r-00000
-         1901    317
-         1949    111
-         1950    22
+ * hadoop net.zhenglai.maxtemp.MaxTemperatureDriver -conf etc/develop/hadoop-local.xml input/ncdc/1901 /tmp/output01
+ * cat /tmp/output01/part-r-00000
+ * or
+ * hadoop net.zhenglai.maxtemp.MaxTemperatureDriver -fs file:/// -jt local input/ncdc/1901 /tmp/output02
+ * or input as one dir
+ * hadoop net.zhenglai.maxtemp.MaxTemperatureDriver -fs file:/// -jt local input/ncdc/micro /tmp/output04
+ * <p>
+ * hadoop-arch [master●●] % cat /tmp/output04/part-r-00000
+ * 1901    317
+ * 1949    111
+ * 1950    22
  */
 public class MaxTemperatureDriver extends Configured implements Tool {
     @Override
@@ -49,6 +49,7 @@ public class MaxTemperatureDriver extends Configured implements Tool {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
+//        The waitForCompletion() method on Job launches the job and polls for progress, writing a line summarizing the map and reduce’s progress whenever either changes.
         return job.waitForCompletion(true) ? 0 : 1;
     }
 

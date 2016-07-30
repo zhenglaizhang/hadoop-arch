@@ -7,3 +7,12 @@ hadoop net.zhenglai.lib.URLCat hdfs://localhost:9000/user/Zhenglai/quangle.txt
 
 # or
 export HADOOP_CLASSPATH=target/classes/
+
+
+# package job jar
+mvn package -DskipTests
+
+
+# run with jar directive, we might need to unset HADOOP_CLASSPATH
+hadoop jar target/hadoop-arch.jar net.zhenglai.maxtemp.MaxTemperatureDriver /data/ncdc/1901.gz /tmp/max-output
+hdfs dfs -cat /tmp/max-output/part-r-00000

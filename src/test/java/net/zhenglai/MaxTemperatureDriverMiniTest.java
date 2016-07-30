@@ -20,6 +20,7 @@ import static org.junit.Assert.assertThat;
  */
 
 // A test for MaxTemperatureDriver that runs in a "mini" HDFS and MapReduce cluster
+// Tests like this serve as regression tests, and are a useful repository of input edge cases and their expected results.
 public class MaxTemperatureDriverMiniTest extends ClusterMapReduceTestCase {
 
     @Override
