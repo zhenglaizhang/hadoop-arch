@@ -60,3 +60,22 @@
 * BytesWritable is a wrapper for an array of binary data. Its serialized format is a 4-byte integer field that specifies the number of bytes to follow, followed by the bytes themselves.
 * BytesWritable is mutable
 * `NullWritable` is a special type of Writable, as it has a zero-length serialization. No bytes are written to or read from the stream. It is used as a placeholder;
+
+
+
+## Serialization frameworks
+
+* only Writable or Avro objects can be serialized or deserialized out of the box.
+* Hadoop includes a class called JavaSerialization that uses Java Object Serialization.
+    * Java Serialization doesn’t meet the criteria for a serialization format listed earlier: compact, fast, extensible, and interoperable.
+* Serialization IDL
+    * a language neutral, declarative fashion, using an interface description language (IDL)
+    * versioning schemes that make type evolution straightforward.
+    * Apache Thrift and Google Protocol Buffers
+        * a format for persistent binary data
+        
+        
+## SequenceFile
+
+* a persistent data structure for binary key-value pairs
+* example log format `<LongWritable (key, timestamp), Writable(log content)>`

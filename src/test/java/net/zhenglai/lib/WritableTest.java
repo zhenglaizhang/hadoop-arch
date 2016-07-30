@@ -1,8 +1,6 @@
 package net.zhenglai.lib;
 
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.*;
 import org.apache.hadoop.util.StringUtils;
 import org.junit.Test;
 
@@ -78,5 +76,19 @@ public class WritableTest {
         b.setCapacity(1000);
         assertEquals(b.getLength(), 2);
         assertEquals(b.getBytes().length, 1000);
+    }
+
+
+    @Test
+    public void MapWritableTest() throws IOException {
+        // Use MapWritable with different types of keys
+        MapWritable src = new MapWritable();
+        src.put(new IntWritable(1), new Text("cat"));
+        src.put(new VIntWritable(2), new LongWritable(163));
+
+        MapWritable dst = new MapWritable();
+        WritableUtils.cloneInto(dst, src);
+        assertEquals((Text) dst.get(new IntWritable(1)), new Text("cat"));
+        assertEquals((LongWritable) dst.get(new VIntWritable(2)), new LongWritable(163));
     }
 }
