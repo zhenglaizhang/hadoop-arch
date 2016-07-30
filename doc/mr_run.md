@@ -30,3 +30,8 @@
 ### Counter
 
 * you should always ask yourself if you can use a counter to get the information you need to find out what’s happening. Even if you need to use logging or a status message, it may be useful to use a counter to gauge the extent of the problem
+
+
+### MapReduce Workflow
+
+* When the processing gets more complex, this complexity is generally manifested by having more MapReduce jobs, rather than having more complex map and reduce functions. In other words, as a rule of thumb, **think about adding more jobs, rather than adding complexity to jobs**.

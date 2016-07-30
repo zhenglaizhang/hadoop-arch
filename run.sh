@@ -22,3 +22,7 @@ hadoop fs -getmerge /tmp/max-output /tmp/max-output-local
 sort /tmp/max-output-local | tail
 
 hadoop fs -cat /tmp/max-output/*
+
+
+# turn on hadoop jvm internal debug logging
+HADOOP_ROOT_LOGGER=DEBUG,console hadoop fs -text /foo/bar
