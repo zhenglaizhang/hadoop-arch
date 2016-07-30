@@ -73,6 +73,8 @@ public class MaxTemperatureDriverMiniTest extends ClusterMapReduceTestCase {
                 output.toString()
         });
 
+        assertThat(exit, is(0));
+
         Path[] outputFiles = FileUtil.stat2Paths(getFileSystem().listStatus(output, new OutputLogFilter()));
         assertThat(outputFiles.length, is(1));
 
