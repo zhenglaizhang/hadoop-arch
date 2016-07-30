@@ -51,3 +51,12 @@
 * In Hadoop, interprocess communication between nodes in the system is implemented using remote procedure calls (RPCs).
 * Hadoop uses its own serialization format, `Writables`, which is certainly compact and fast, but not so easy to extend or use from languages other than Java
 * Avro (a serialization system that was designed to overcome some of the limitations of Writables)
+* The bytes are written in **big-endian order** (so the most significant byte is written to the stream first, which is dictated by the java.io.DataOutput interface), and we can see their hexadecimal representation by using a method on Hadoop’s StringUtils:
+* Advantages of variable length `VIntWritable` and `VLongWritable`
+    * values is fairly uniform across the whole value space, such as when using a (well-designed) hash function. Most numeric variables tend to have nonuniform distributions, though, and on average, the variablelength encoding will save space. 
+    * Another advantage of variable-length encodings is that you can switch from VIntWritable to VLongWritable, because their encodings are actually the same.
+* Text is a Writable for UTF-8 sequences. 
+* Text is mutable (like all Writable implementations in Hadoop, except NullWritable, which is a singleton
+* BytesWritable is a wrapper for an array of binary data. Its serialized format is a 4-byte integer field that specifies the number of bytes to follow, followed by the bytes themselves.
+* BytesWritable is mutable
+* `NullWritable` is a special type of Writable, as it has a zero-length serialization. No bytes are written to or read from the stream. It is used as a placeholder;
