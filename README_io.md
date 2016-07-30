@@ -79,3 +79,13 @@
 
 * a persistent data structure for binary key-value pairs
 * example log format `<LongWritable (key, timestamp), Writable(log content)>`
+* A sync point is a point in the stream that can be used to resynchronize with a record boundary if the reader is “lost”
+* SequenceFile.Writer, which inserts a special entry to mark the sync point every few records as a sequence file is being written
+* The `sync(long position)` method on SequenceFile.Reader positions the reader at the next sync point after position.
+* A sequence file consists of a header followed by one or more records, first 3 bytes are SEQ, which act as a magic number
+
+![](.README_io_images/sequencefile_structure.png)
+
+![](.README_io_images/sequencefile_structure_block_compression.png)
+* If no compression is enabled (the default), each record is made up of the record length (in bytes), the key length, the key, and then the value.
+* The format for record compression is almost identical to that for no compression, except the value bytes are compressed using the codec defined in the header. Note that keys are not compressed.

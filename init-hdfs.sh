@@ -42,3 +42,21 @@ hadoop fs -checksum /data/ncdc/1901
 # 16/07/29 22:12:24 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using
 # builtin-java classes where applicable
 # /data/ncdc/1901 MD5-of-0MD5-of-512CRC32C        000002000000000000000000a35b0f71f7c5fbaebfc63e694f4fc516
+
+
+# -text understand plain text, gzipeed, sequence file, and avro data file
+hdfs dfs -text numbers.seq | head
+
+
+export HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.2/libexec
+
+hadoop jar \
+$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar \
+sort -r 1 \
+-inFormat org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat \
+-outFormat org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat \
+-outKey org.apache.hadoop.io.IntWritable \
+-outValue org.apache.hadoop.io.Text \
+numbers.seq sorted
+
+hadoop fs -text sorted/part-r-00000 | head
