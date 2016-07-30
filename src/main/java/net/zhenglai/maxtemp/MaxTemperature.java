@@ -1,4 +1,4 @@
-package net.zhenglai;
+package net.zhenglai.maxtemp;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -27,7 +27,7 @@ public class MaxTemperature {
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-        job.setMapperClass(MaxTemperatureMpper.class);
+        job.setMapperClass(MaxTemperatureMapper.class);
         job.setReducerClass(MaxTemperatureReducer.class);
 
         // combiner is the same as reducer here

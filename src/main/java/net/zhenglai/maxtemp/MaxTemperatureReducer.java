@@ -1,4 +1,4 @@
-package net.zhenglai;
+package net.zhenglai.maxtemp;
 
 import net.zhenglai.lib.Streams;
 import org.apache.hadoop.io.IntWritable;

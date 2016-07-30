@@ -1,4 +1,4 @@
-package net.zhenglai;
+package net.zhenglai.maxtemp;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -14,7 +14,7 @@ import java.io.IOException;
  * Created by Zhenglai on 7/29/16.
  *
  * Run:
- *  hadoop net.zhenglai.MaxTemperatureWithCompression /data/ncdc/1901.gz /data/ncdc/output-testgz
+ *  hadoop net.zhenglai.maxtemp.MaxTemperatureWithCompression /data/ncdc/1901.gz /data/ncdc/output-testgz
  *  hdfs dfs -get /data/ncdc/output-testgz/part-r-00000.gz /tmp/test.gz
  *  gunzip -c /tmp/test.gz
  */
@@ -34,7 +34,7 @@ public class MaxTemperatureWithCompression {
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-        job.setMapperClass(MaxTemperatureMpper.class);
+        job.setMapperClass(MaxTemperatureMapper.class);
         job.setReducerClass(MaxTemperatureReducer.class);
 
         // combiner is the same as reducer here
