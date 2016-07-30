@@ -16,7 +16,8 @@ public class MaxTemperatureMapper
         extends Mapper<LongWritable, Text, Text, IntWritable> {
 
     public enum Temperature {
-        OVER_100
+        OVER_100,
+        MALFORMED
     }
 
     private NcdcRecordParser parser = new NcdcRecordParser();
@@ -40,7 +41,9 @@ public class MaxTemperatureMapper
                         new IntWritable(airTemperature)
                 );
             }
-
+        } else if (parser.isMalformedTemperature()) {
+            System.err.println("Ignoring possibly corrupt input: " + value);
+            context.getCounter(Temperature.MALFORMED).increment(1);
         }
     }
 }
