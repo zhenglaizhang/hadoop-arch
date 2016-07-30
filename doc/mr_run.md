@@ -21,3 +21,12 @@
 * Tasks may be executed more than once, due to failure or speculative execution, identify different instances of a task execution, task attempts are given unique IDs.
 * The task IDs are created for a job when it is initialized, so they do not necessarily dictate the order in which the tasks will be executed.
 * Task attempts are allocated during the job run as needed, so their ordering represents the order in which they were created to run.
+* Each reducer produces one output file, e.g. 30 reducers might produce 30 part files named part-r-00000 to partr-00029 in the max-temp directory.
+* reduce output partitions are unordered (owing to the hash partition function). Doing a bit of postprocessing of data from MapReduce is very common,
+
+
+## Debugging
+
+### Counter
+
+* you should always ask yourself if you can use a counter to get the information you need to find out what’s happening. Even if you need to use logging or a status message, it may be useful to use a counter to gauge the extent of the problem
