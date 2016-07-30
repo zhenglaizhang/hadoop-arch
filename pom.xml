@@ -9,19 +9,24 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <hadoopVersion>2.7.2</hadoopVersion>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <hadoop.version>2.7.2</hadoop.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-common</artifactId>
-            <version>${hadoopVersion}</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.apache.hadoop</groupId>-->
+        <!--<artifactId>hadoop-common</artifactId>-->
+        <!--<version>${hadoop.version}</version>-->
+        <!--</dependency>-->
+        <!-- Hadoop main client artifact -->
+        <!--For building MapReduce jobs, you only need to have the hadoop-client dependency-->
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>
-            <version>${hadoopVersion}</version>
+            <version>${hadoop.version}</version>
         </dependency>
+
+        <!-- Unit test artificats -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -30,6 +35,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>hadoop-arch</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -38,6 +44,14 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <outputDirectory>${basedir}/target</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
