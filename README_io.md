@@ -89,3 +89,13 @@
 ![](.README_io_images/sequencefile_structure_block_compression.png)
 * If no compression is enabled (the default), each record is made up of the record length (in bytes), the key length, the key, and then the value.
 * The format for record compression is almost identical to that for no compression, except the value bytes are compressed using the codec defined in the header. Note that keys are not compressed.
+
+
+## Column-oriented foramts
+
+* Column-oriented formats need more memory for reading and writing, since they have to buffer a **row split** in memory, rather than just a single row.
+* it’s not usually possible to control when writes occur (via flush or sync operations), so column-oriented formats are not suited to streaming writes, as the current file cannot be recovered if the writer process fails.
+* Hive’s RCFile, short for Record Columnar File. 
+* It has since been superseded by Hive’s ORCFile (Optimized Record Columnar File), 
+* and Parquet
+* Avro also has a column-oriented format called **Trevni**.
