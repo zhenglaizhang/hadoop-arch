@@ -8,7 +8,7 @@ import java.io.IOException;
 
 /**
  * Created by Zhenglai on 7/30/16.
- *  hadoop jar target/hadoop-arch.jar net.zhenglai.mr.LoggingDriver -fs file:/// -jt local -D mapreduce.map.log.level=DEBUG input/ncdc/all /tmp/output07
+ * hadoop jar target/hadoop-arch.jar net.zhenglai.mr.LoggingDriver -fs file:/// -jt local -D mapreduce.map.log.level=DEBUG input/ncdc/all /tmp/output07
  */
 public class LoggingIdentityMapper<KEYIN, VALUEIN, KEYOUT, VALUEOUT>
         extends Mapper<KEYIN, VALUEIN, KEYOUT, VALUEOUT> {
@@ -28,6 +28,14 @@ public class LoggingIdentityMapper<KEYIN, VALUEIN, KEYOUT, VALUEOUT>
             LOG.debug("Map value: " + value);
         }
 
+        // logging context info
+        LOG.info(String.format(
+                "\njob id: %s\ntask type: %s\n task id: %s\ntask attempt id:%s",
+                context.getJobID(),
+                context.getTaskAttemptID().getTaskType(),
+                context.getTaskAttemptID().getTaskID(),
+                context.getTaskAttemptID().getId()
+        ));
         context.write((KEYOUT) key, (VALUEOUT) value);
     }
 }
