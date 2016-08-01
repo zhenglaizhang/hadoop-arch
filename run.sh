@@ -26,3 +26,7 @@ hadoop fs -cat /tmp/max-output/*
 
 # turn on hadoop jvm internal debug logging
 HADOOP_ROOT_LOGGER=DEBUG,console hadoop fs -text /foo/bar
+
+
+export HADOOP_ROOT_LOGGER=DEBUG,console
+hadoop checknative
