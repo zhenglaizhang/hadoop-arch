@@ -8,8 +8,11 @@ import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.OutputFormat;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -72,6 +75,8 @@ public class PartitionByStationDriver extends Configured implements Tool {
         job.setMapOutputKeyClass(Text.class);
         job.setReducerClass(MultipleOutputsReducer.class);
         job.setOutputKeyClass(NullWritable.class);
+        LazyOutputFormat.setOutputFormatClass(job, TextOutputFormat.class);
+        job.setOutputFormatClass(LazyOutputFormat.class);
 
         return job.waitForCompletion(true) ? 0 : 1;
     }
