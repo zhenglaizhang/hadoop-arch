@@ -17,13 +17,12 @@ import java.io.IOException;
 
 /**
  * Created by Zhenglai on 8/1/16.
- *  // PartitionByStationUsingMultipleOutputs
- *
- *
- *
- *  export HADOOP_CLASSPATH=target/classes/
- *  hadoop net.zhenglai.mr.PartitionByStationDriver -fs file:/// -jt local input/ncdc/all /tmp/output09
- *  ll /tmp/output09
+ * // PartitionByStationUsingMultipleOutputs
+ * <p>
+ * export HADOOP_CLASSPATH=target/classes/
+ * hadoop net.zhenglai.mr.PartitionByStationDriver -fs file:/// -jt local input/ncdc/all /tmp/output09
+ * ll /tmp/output09
+ * </p>
  */
 public class PartitionByStationDriver extends Configured implements Tool {
 
@@ -39,6 +38,7 @@ public class PartitionByStationDriver extends Configured implements Tool {
 
     static class MultipleOutputsReducer extends Reducer<Text, Text, NullWritable, Text> {
         private MultipleOutputs<NullWritable, Text> multipleOutputs;
+        private NcdcRecordParser parser = new NcdcRecordParser();
 
         @Override
         protected void setup(Context context) throws IOException, InterruptedException {
@@ -47,8 +47,10 @@ public class PartitionByStationDriver extends Configured implements Tool {
 
         @Override
         protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-            for (Text value: values) {
-               multipleOutputs.write(NullWritable.get(), value, key.toString());
+            for (Text value : values) {
+                parser.parse(value);
+                String basePath = String.format("%s/%s/part", parser.getStationId(), parser.getYear());
+                multipleOutputs.write(NullWritable.get(), value, basePath);
             }
         }
 
@@ -71,7 +73,7 @@ public class PartitionByStationDriver extends Configured implements Tool {
         job.setReducerClass(MultipleOutputsReducer.class);
         job.setOutputKeyClass(NullWritable.class);
 
-        return job.waitForCompletion(true) ? 0: 1;
+        return job.waitForCompletion(true) ? 0 : 1;
     }
 
     public static void main(String[] args) throws Exception {
