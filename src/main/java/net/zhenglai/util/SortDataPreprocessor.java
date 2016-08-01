@@ -5,9 +5,7 @@ import net.zhenglai.lib.NcdcRecordParser;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.compress.GzipCodec;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
@@ -25,6 +23,9 @@ public class SortDataPreprocessor extends Configured implements Tool {
             extends Mapper<LongWritable, Text, IntWritable, Text> {
         private NcdcRecordParser parser = new NcdcRecordParser();
 
+        /*
+        if you use no reducers, mapper does not sort the data. If you do use reducers, the data start getting sorted from the map phase and then get merge-sorted in the reduce phase.
+         */
         @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             parser.parse(value);
@@ -47,9 +48,13 @@ public class SortDataPreprocessor extends Configured implements Tool {
 
         job.setNumReduceTasks(0);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
-        SequenceFileOutputFormat.setCompressOutput(job, true);
-        SequenceFileOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
-        SequenceFileOutputFormat.setOutputCompressionType(job, SequenceFile.CompressionType.BLOCK);
+        // Tentative disable the compression for SequenceFile output
+        //      java.lang.Exception: java.lang.IllegalArgumentException: SequenceFile doesn't work with GzipCodec
+        // without native-hadoop code!
+
+        SequenceFileOutputFormat.setCompressOutput(job, false);
+//        SequenceFileOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
+//        SequenceFileOutputFormat.setOutputCompressionType(job, SequenceFile.CompressionType.BLOCK);
 
         return job.waitForCompletion(true) ? 0 : 1;
     }
