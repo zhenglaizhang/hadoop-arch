@@ -39,7 +39,6 @@ by tagging station records as 0 and weather records as 1.
         @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             if (parser.parse(value)) {
-                System.out.printf("Meta-StationId: %s", parser.getStationId());
                 context.write(new TextPair(
                         parser.getStationId(), "0"
                 ), new Text(parser.getStationName()));
@@ -54,7 +53,6 @@ by tagging station records as 0 and weather records as 1.
         @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             parser.parse(value);
-            System.out.printf("Record-StationId: %s", parser.getStationId());
             context.write(new TextPair(parser.getStationId(), "1"), value);
         }
     }
