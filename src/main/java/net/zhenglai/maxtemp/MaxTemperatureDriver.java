@@ -26,6 +26,18 @@ import org.apache.hadoop.util.ToolRunner;
  * 1901    317
  * 1949    111
  * 1950    22
+ * <p>
+ * <p>
+ * <p>
+ * <p>
+ * <p>
+ * <p>
+ * <p>
+ * TemperatureQuality
+ * 1=13129
+ * 9=1
+ * net.zhenglai.maxtemp.MaxTemperatureMapper$Temperature
+ * MISSING=1
  */
 public class MaxTemperatureDriver extends Configured implements Tool {
     @Override

@@ -17,7 +17,8 @@ public class MaxTemperatureMapper
 
     public enum Temperature {
         OVER_100,
-        MALFORMED
+        MALFORMED,
+        MISSING
     }
 
     private NcdcRecordParser parser = new NcdcRecordParser();
@@ -34,16 +35,21 @@ public class MaxTemperatureMapper
                 // check the task and task attempts page
                 context.setStatus("Detected possibly corrupt record: see logs");
                 // mapred job -counter job_1410450250506_0006  'net.zhenglai.maxtemp.MaxTemperatureMapper$Temperature' OVER_100
-                context.getCounter(Temperature.OVER_100).increment(1);
-            } else {
-                context.write(
-                        new Text(parser.getYear()),
-                        new IntWritable(airTemperature)
-                );
+                context.getCounter(Temperature.OVER_100).increment(1L);
             }
+
+            context.write(
+                    new Text(parser.getYear()),
+                    new IntWritable(airTemperature)
+            );
         } else if (parser.isMalformedTemperature()) {
             System.err.println("Ignoring possibly corrupt input: " + value);
-            context.getCounter(Temperature.MALFORMED).increment(1);
+            context.getCounter(Temperature.MALFORMED).increment(1L);
+        } else if (parser.isMissingTemperature()) {
+            context.getCounter(Temperature.MISSING).increment(1L);
         }
+
+        // dynamic counter
+        context.getCounter("TemperatureQuality", parser.getQuality()).increment(1L);
     }
 }
