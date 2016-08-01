@@ -60,3 +60,20 @@ sort -r 1 \
 numbers.seq sorted
 
 hadoop fs -text sorted/part-r-00000 | head
+
+
+
+
+hdfs dfsadmin -safemode enter
+hdfs dfsadmin -safemode get
+hdfs dfsadmin -safemode wait    # wait to exit safe mode, helpful in script
+hdfs dfsadmin -safemode leave
+hdfs dfsadmin -safemode get
+
+
+# enable auditing
+export HDFS_AUDIT_LOGGER="INFO,RFAAUDIT"
+# A log line is written to the audit log (hdfs-audit.log) for every HDFS event.
+
+
+hdfs fsck /
