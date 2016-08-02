@@ -94,10 +94,9 @@ public class AvroGenericMaxTemperature extends Configured implements Tool {
         }
 
         Job job = new Job(getConf(), "Max Temperature with Avro");
-        job.setJarByClass(getClass());
-
         job.getConfiguration().setBoolean(Job.MAPREDUCE_JOB_USER_CLASSPATH_FIRST, true);
 
+        job.setJarByClass(getClass());
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
