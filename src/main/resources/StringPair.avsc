@@ -1,4 +1,5 @@
 {
+    "namespace": "net.zhenglai.avro",
     "type": "record",
      "name": "StringPair",
      "doc": "A pair of strings.",
