@@ -1,5 +1,8 @@
 -- Finds the maximum temperature by year
 
+-- Pig Latin is a data flow programming language,
+-- whereas SQL is a declarative programming language
+
 records = LOAD 'input/ncdc/micro-tab/sample.txt'
     AS (year: chararray, temperature:int, quality:int);
 
