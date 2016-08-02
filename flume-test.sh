@@ -13,3 +13,10 @@ flume-ng agent \
 
 echo "Hello Flume" > /tmp/spooldir/.file1.txt
 mv /tmp/spooldir/.file1.txt /tmp/spooldir/file1.txt
+
+
+
+
+
+flume-ng agent --conf-file spool-to-hdfs-tiered.properties --name agent1 ...
+flume-ng agent --conf-file spool-to-hdfs-tiered.properties --name agent2 ...
