@@ -11,6 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hadoop.version>2.7.2</hadoop.version>
+        <avro.version>1.8.1</avro.version>
     </properties>
     <dependencies>
         <!--<dependency>-->
@@ -48,6 +49,11 @@
             <version>${hadoop.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro-mapred</artifactId>
+            <version>${avro.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>hadoop-arch</finalName>
@@ -68,6 +74,29 @@
                 <configuration>
                     <outputDirectory>${basedir}/target</outputDirectory>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro-maven-plugin</artifactId>
+                <version>${avro.version}</version>
+                <executions>
+                    <execution>
+                        <id>schemas</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schema</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>StringPair.avsc</include>
+                            </includes>
+                            <stringType>String</stringType>
+                            <sourceDirectory>src/main/resources</sourceDirectory>
+                            <outputDirectory>${project.build.directory}/generated-sources/java
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
