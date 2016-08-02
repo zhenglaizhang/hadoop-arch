@@ -50,7 +50,15 @@ public class AvroTest {
     @Test
     public void TestGenericApi() throws IOException {
         Schema.Parser parser = new Schema.Parser();
-        Schema schema = parser.parse(getClass().getResourceAsStream("StringPair.avsc"));
+        Schema schema = parser.parse("{\n" +
+                "    \"type\": \"record\",\n" +
+                "     \"name\": \"StringPair\",\n" +
+                "     \"doc\": \"A pair of strings.\",\n" +
+                "     \"fields\": [\n" +
+                "        { \"name\": \"left\", \"type\": \"string\" },\n" +
+                "        { \"name\": \"right\", \"type\": \"string\" }\n" +
+                "     ]\n" +
+                "}");
         GenericRecord datum = new GenericData.Record(schema);
         datum.put("left", "L");
         datum.put("right", "R");
@@ -62,5 +70,12 @@ public class AvroTest {
         writeri.write(datum, encoder);
         encoder.flush();
         out.close();
+
+
+        DatumReader<GenericRecord> reader = new GenericDatumReader<>(schema);
+        Decoder decoder = DecoderFactory.get().binaryDecoder(out.toByteArray(), null);
+        GenericRecord result = reader.read(null, decoder);
+        assertThat(result.get("left").toString(), is("L"));
+        assertThat(result.get("right").toString(), is("R"));
     }
 }
