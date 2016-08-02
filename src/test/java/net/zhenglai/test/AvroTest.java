@@ -3,6 +3,8 @@ package net.zhenglai.test;
 
 import net.zhenglai.avro.StringPair;
 import org.apache.avro.Schema;
+import org.apache.avro.file.DataFileReader;
+import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericDatumWriter;
@@ -14,6 +16,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
+import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -82,6 +85,10 @@ public class AvroTest {
         assertThat(result.get("right").toString(), is("R"));
     }
 
+    /*
+$ mvn compile # includes code generation via Avro Maven plugin
+$ mvn -q exec:java -Dexec.mainClass=example.SpecificMain
+     */
     @Test
     public void testSpecificApi() throws IOException {
         StringPair datum = new StringPair();
@@ -101,5 +108,33 @@ public class AvroTest {
         StringPair result = reader.read(null, decoder);
         assertThat(result.getLeft(), is("L"));
         assertThat(result.getRight(), is("R"));
+
+
+        StringPair sp1 = new StringPair("Hello", "Avro");
+        StringPair sp2 = StringPair.newBuilder()
+                .setLeft("Avro")
+                .setRight("Hello")
+                .build();
+        // Serialize user1, user2 and user3 to disk
+        DatumWriter<StringPair> userDatumWriter = new SpecificDatumWriter<StringPair>(StringPair.class);
+        DataFileWriter<StringPair> dataFileWriter = new DataFileWriter<StringPair>(userDatumWriter);
+        dataFileWriter.create(datum.getSchema(), new File("users.avro"));
+        dataFileWriter.append(datum);
+        dataFileWriter.append(sp1);
+        dataFileWriter.append(sp2);
+        dataFileWriter.close();
+
+        // Deserialize Users from disk
+        File file = new File("users.avro");
+        DatumReader<StringPair> userDatumReader = new SpecificDatumReader<StringPair>(StringPair.class);
+        DataFileReader<StringPair> dataFileReader = new DataFileReader<StringPair>(file, userDatumReader);
+        StringPair user = null;
+        while (dataFileReader.hasNext()) {
+// Reuse user object by passing it to next(). This saves us from
+// allocating and garbage collecting many objects for files with
+// many items.
+            user = dataFileReader.next(user);
+            System.out.println(user);
+        }
     }
 }
