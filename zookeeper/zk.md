@@ -144,3 +144,12 @@ loss exceptions in real-world ZooKeeper applications
 * Applications that create more complex ephemeral state should favor longer session timeouts, as the cost of reconstruction is higher. In some cases, it is possible to design the application so it can restart within the session timeout period and avoid session expiry. (This might be desirable to perform maintenance or upgrades.) Every session is given a unique identity and password by the server
 * As a general rule, the larger the ZooKeeper ensemble, the larger the session timeout should be
 
+### States
+The ZooKeeper object transitions through different states in its lifecycle
+`public States getState()`
+
+* Despite the enum’s name, an instance of ZooKeeper may be in only one state at a time
+
+![](.zk_images/zk_state_transition.png)
+
+A ZooKeeper Watcher object serves double duty: it can be used to be notified of changes in the ZooKeeper state (as described in this section), and it can be used to be notified of changes in znodes
