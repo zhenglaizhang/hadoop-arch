@@ -40,6 +40,9 @@ hbase(main):011:0> list
 # stop hbase
 % stop-hbase.sh
 
+# find number of rows
+# It’s not distributed, though, so for large tables the MapReduce program is preferable
+> count 'test'
 
 
 export HBASE_CLASSPATH=target/hadoop-arch.jar
