@@ -66,5 +66,52 @@ Clients may authenticate themselves after establishing a ZooKeeper session
 * ip
 
 
+### Implementation
+
+* standalone mode
+* replicated mode
+    * ensemble
+    * achieve HA through replication
+    * majority
+    * it is usual to have an odd number of machines in an ensemble.
+* all ZK has to do is ensure that every modification to the tree of znodes is replicated to a majority of the ensemble 
+* If a minority of the machines fail, then a minimum of one machine will survive with the latest state. The other remaining replicas will eventually catch up with this state.
+* Zab Protocol
+    * Phase 1: Leader election 
+        * leaders 
+        * followers 
+        * This phase is finished once a majority (or quorum) of followers have synchronized their state with the leader.
+    * Phase 2: Atomic broadcast
+* If the leader fails, the remaining machines hold another leader election.
+* Leader election is very fast, around 200ms
+* All machines in the ensemble write updates to disk before updating their in-memory copies of the znode tree. 
+* Read requests may be serviced from any machine, and because they involve only a lookup from memory, they are very fast.
+
+* Reads are satisfied by followers, whereas writes are committed by the leader
+* A follower may lag the leader by a number of updates
+
+### Constiency
+
+![](.zk_images/zk_rw_flow.png)
+
+* Every update made to the znode tree is given a globally unique identifier, called a `zxid`
+* Updates are ordered, so if zxid z1 is less than z2, then z1 happened before z2, according to ZooKeeper (which is the single authority on ordering in the distributed system).
+
+----
+- Sequential consistency
+    - Updates from any particular client are applied in the order that they are sent 
+- Atomicity
+    - Updates either succeed or fail   
+- Single system image
+    - A client will see the same view of the system
+    - a server that is behind the one that failed will not accept connections from the client until it has caught up with the failed server. 
+- Durability
+    - Updates will survive server failures 
+- Timeliness
+    - The lag in any client’s view of the system is bounded 
+    - rather than allow a client to see data that is very stale, a server will shut down, forcing the client to switch to a more up-to-date server.
+- For performance reasons, reads are satisfied from a ZooKeeper server’s memory and do not participate in the global ordering of writes
+    - the `sync` operation is available only as an asynchronous call. This is because you don’t need to wait for it to return, since ZooKeeper guarantees that any subsequent operation will happen after the sync completes on the server 
+
 
 
