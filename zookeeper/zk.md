@@ -113,5 +113,34 @@ Clients may authenticate themselves after establishing a ZooKeeper session
 - For performance reasons, reads are satisfied from a ZooKeeper server’s memory and do not participate in the global ordering of writes
     - the `sync` operation is available only as an asynchronous call. This is because you don’t need to wait for it to return, since ZooKeeper guarantees that any subsequent operation will happen after the sync completes on the server 
 
+### Sessions
 
+
+* A ZooKeeper client is configured with the list of servers in the ensemble. until it either successfully connects to one of them or fails
+* Once a connection has been made with a ZooKeeper server, the server creates a new session for the client. A session has a timeout period that is decided on by the application that creates it.
+* Sessions are kept alive by the client sending ping requests (also known as heartbeats) whenever the session is idle for longer than a certain period
+* The period is chosen to be low enough to detect server failure (manifested by a read timeout) and reconnect to another server within the session timeout period.
+
+Failover to another ZooKeeper server is handled automatically by the ZooKeeper client,
+and crucially, sessions (and associated ephemeral znodes) are still valid after another
+server takes over from the failed one.
+
+During failover, the application will receive notifications of disconnections and connections
+to the service. Watch notifications will not be delivered while the client is
+disconnected, but they will be delivered when the client successfully reconnects. Also,
+if the application tries to perform an operation while the client is reconnecting to another
+server, the operation will fail. This underlines the importance of handling connection
+loss exceptions in real-world ZooKeeper applications
+
+
+### Time
+
+#### tick time
+
+* The session timeout, for example, may not be less than 2 ticks or more than 20.
+* A low session timeout leads to faster detection of machine failure.
+* Beware of setting the session timeout too low, however, because a busy network can cause packets to be delayed and may cause inadvertent session expiry
+* it is possible to design the application so it can restart within the session timeout period and avoid session expiry. 
+* Applications that create more complex ephemeral state should favor longer session timeouts, as the cost of reconstruction is higher. In some cases, it is possible to design the application so it can restart within the session timeout period and avoid session expiry. (This might be desirable to perform maintenance or upgrades.) Every session is given a unique identity and password by the server
+* As a general rule, the larger the ZooKeeper ensemble, the larger the session timeout should be
 
