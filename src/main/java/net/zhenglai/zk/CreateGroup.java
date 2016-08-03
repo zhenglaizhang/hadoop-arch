@@ -24,6 +24,7 @@ public class CreateGroup implements Watcher {
         // the first is the host address (and optional port, which defaults to 2181)
         // this is the watcher object, to receive callback when watched event occurs
         zk = new ZooKeeper(hosts, SESSION_TIMEOUT, this);
+        // zk.addAuthInfo("digest", "tom:secret".getBytes());
         // When a ZooKeeper instance is created, it starts a thread to connect to the ZooKeeper service.
         // The call to the constructor returns immediately
         connectedSignal.await();
@@ -40,6 +41,7 @@ public class CreateGroup implements Watcher {
 
     public void create(String groupName) throws KeeperException, InterruptedException {
         String path = "/" + groupName;
+        // OPEN_ACL_UNSAFE, which gives all permissions (except ADMIN permission) to everyone.
         String createdPath = zk.create(path, null/*data*/, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
         System.out.printf("Created %s", createdPath);
     }
