@@ -50,5 +50,10 @@ zkCli
 #ephemeral node has been removed:
 % java ListGroup localhost zoo
 
+
+% java DeleteGroup localhost zoo
+% java ListGroup localhost zoo
+# Group zoo does not exist
+
 % zkCli.sh -server localhost ls /zoo
 
