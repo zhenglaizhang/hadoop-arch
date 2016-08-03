@@ -13,6 +13,7 @@
         <hadoop.version>2.7.2</hadoop.version>
         <avro.version>1.8.1</avro.version>
         <parquet.version>1.8.1</parquet.version>
+        <hbase.version>1.2.2</hbase.version>
     </properties>
     <dependencies>
         <!--<dependency>-->
@@ -80,6 +81,16 @@
             <groupId>org.apache.parquet</groupId>
             <artifactId>parquet-avro</artifactId>
             <version>${parquet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>${hbase.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-server</artifactId>
+            <version>${hbase.version}</version>
         </dependency>
     </dependencies>
     <build>

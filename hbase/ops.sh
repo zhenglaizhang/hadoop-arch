@@ -39,3 +39,8 @@ hbase(main):011:0> list
 
 # stop hbase
 % stop-hbase.sh
+
+
+
+export HBASE_CLASSPATH=target/hadoop-arch.jar
+hbase net.zhenglai.hbase.ExampleClientOldApi
