@@ -1,7 +1,7 @@
 package net.zhenglai.test;
 
 
-import net.zhenglai.avro.StringPair;
+import net.zhenglai.test.StringPair;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.DataFileWriter;

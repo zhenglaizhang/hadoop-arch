@@ -1,4 +1,5 @@
 {
+  "namespace": "net.zhenglai.test",
   "type": "record",
   "name": "StringPair",
   "doc": "A pair of strings.",
