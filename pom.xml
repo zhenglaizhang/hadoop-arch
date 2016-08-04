@@ -58,6 +58,11 @@
 
 
         <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>scalding-core_2.10</artifactId>
+            <version>0.16.1-cascading3-RC1</version>
+        </dependency>
+        <dependency>
             <groupId>cascading</groupId>
             <artifactId>cascading-core</artifactId>
             <version>${cascading.version}</version>
@@ -210,7 +215,7 @@
                         </goals>
                         <configuration>
                             <args>
-                                <arg>-make:transitive</arg>
+                                <!--<arg>-make:transitive</arg>-->
                                 <arg>-dependencyfile</arg>
                                 <arg>${project.build.directory}/.scala_dependencies</arg>
                             </args>
