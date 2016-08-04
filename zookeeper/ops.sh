@@ -34,7 +34,7 @@ zkCli
 
 
 
-export CLASSPATH=.:target/classes/:$ZOOKEEPER_HOME/*:$ZOOKEEPER_HOME/lib/*:$ZOOCFGDIR:/Users/Zhenglai/.m2/repository/org/apache/avro/avro-tools/1.8.1/avro-tools-1.8.1.jar
+export CLASSPATH=.:target/classes/:$ZOOKEEPER_HOME/*:$ZOOKEEPER_HOME/lib/*:$ZOOCFGDIR
 # demo group membership
 java net.zhenglai.zk.CreateGroup localhost zoo
 java net.zhenglai.zk.ListGroup localhost zoo

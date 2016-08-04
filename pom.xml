@@ -134,6 +134,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>${zookeeper.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
             <version>${avro.version}</version>
@@ -174,11 +179,7 @@
             <artifactId>hbase-server</artifactId>
             <version>${hbase.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>${zookeeper.version}</version>
-        </dependency>
+
     </dependencies>
     <build>
         <finalName>hadoop-arch</finalName>
