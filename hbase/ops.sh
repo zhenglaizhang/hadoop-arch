@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
 
+# tall in numbers of rows (billions), wide in numbers of columns (millions), and able to be horizontally partitioned and replicated across thousands of commodity nodes automatically.
+#
+#
+
+
 start-hbase.sh
 
 hbase shell
@@ -45,5 +50,12 @@ hbase(main):011:0> list
 > count 'test'
 
 
+# run hbase app
 export HBASE_CLASSPATH=target/hadoop-arch.jar
 hbase net.zhenglai.hbase.ExampleClientOldApi
+
+
+
+# run hbase MR app
+export HADOOP_CLASSPATH=`hbase classpath`
+hadoop jar target/hadoop-arch.jar net.zhenglai.mr.hbase.SimpleRowCounter -D mapreduce.job.reduces=1 -fs file:/// -jt local test
