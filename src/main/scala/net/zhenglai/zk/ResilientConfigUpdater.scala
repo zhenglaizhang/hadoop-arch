@@ -11,6 +11,8 @@ import scala.util.Random
   */
 class ResilientConfigUpdater(hosts: String) {
 
+  import ResilientConfigUpdater._
+
   val store = new ActiveKeyValueStore
   store.connect(hosts)
   private val random = new Random
@@ -29,7 +31,6 @@ class ResilientConfigUpdater(hosts: String) {
         case e: KeeperException ⇒
           // already retried
           e.printStackTrace()
-          return -1
       }
     }
   }

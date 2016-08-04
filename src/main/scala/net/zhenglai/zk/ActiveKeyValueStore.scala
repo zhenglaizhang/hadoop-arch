@@ -16,7 +16,7 @@ object ActiveKeyValueStore {
   private val RETRY_PERIOD_SECONDS = 5
 }
 
-class ActiveKeyValueStore extends ConnectionWatcher {
+class ActiveKeyValueStore extends ConnectionWatcherS {
 
   import ActiveKeyValueStore._
 
