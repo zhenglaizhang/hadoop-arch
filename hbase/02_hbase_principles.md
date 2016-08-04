@@ -31,3 +31,11 @@
 ## Table Storage
 * a table is composed of one to many regions, composed of one to many column families, composed of a single store, composed of a unique memstore plus one to many HFiles, composed of blocks composed of cells.
 * On a RegionServer, you will have as many **memstores as you have regions multiplied by the number of column families receiving writes,** all sharing the same reserved memory area.
+
+## Regions
+
+* tables are split into regions where each region will store a specific range of data.
+* The regions are assigned to **RegionServers** to serve each region’s content. * When they become too big, regions can be split. They can also be merged if required.
+* Each region will have a start key and an end key that will define its boundaries.
+* All this information will be stored within the files into the region but also into the hbase:meta table
+* When they become too big, regions can be split. They can also be merged if required.
