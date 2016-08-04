@@ -25,7 +25,7 @@ class ResilientConfigUpdater(hosts: String) {
         printf("Set %s to %s\n", PATH, value)
         TimeUnit.SECONDS.sleep(random.nextInt(10))
       } catch {
-        case KeeperException.SessionExpiredException ⇒
+        case _: KeeperException.SessionExpiredException ⇒
           // start a new session
           printf("session expired, starting new one...")
         case e: KeeperException ⇒
