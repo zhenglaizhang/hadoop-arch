@@ -2,6 +2,18 @@
 
 ## Maven
 
+Maven is an attempt to apply patterns to a project's build infrastructure in order to promote comprehension and productivity by providing a clear path in the use of best practices.
+
+* Builds
+* Documentation
+* Reporting
+* Dependencies
+* SCMs
+* Releases
+* Distribution
+
+Maven can provide benefits for your build process by **employing standard conventions and practices** to accelerate your development cycle
+
 * Build tool
 * Project management tool
 
@@ -43,6 +55,8 @@ The pom.xml file is the project's **Project Object Model**, or POM
 * version (1.0-SNAPSHOT by default)
 
 No need to worry about indirect dependencies of direct dependency in pom, maven will handle that for us
+
+**Maven's archetype mechanism.** An archetype is defined as an original pattern or model from which all other things of the same kind are made. In Maven, an archetype is a template of a project which is combined with some user input to produce a working Maven projec
 
 ```bash
 # compile to classes file
@@ -119,3 +133,13 @@ Finally, we could start building
 * Artifact ID
 * Version
 * Package
+
+
+----
+* This is the standard layout for Maven projects (the application sources reside in ${basedir}/src/main/java and test sources reside in ${basedir}/src/test/java, where **`${basedir}`** represents the directory containing pom.xml).
+* the compiled classes were placed in ${basedir}/target/classes, which is another standard convention employed by Maven.
+
+`mvn test` will compile and run test code
+* Maven downloads more dependencies this time. These are the dependencies and plugins necessary for executing the tests (it already has the dependencies it needs for compiling and won't download them again).
+
+`mvn test-compile` will only compile the test resources
