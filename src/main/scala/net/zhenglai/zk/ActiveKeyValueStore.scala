@@ -23,15 +23,15 @@ class ActiveKeyValueStore extends ConnectionWatcherS {
 
   // Taken as a whole, the write() method is idempotent, so we can afford to unconditionally retry it.
   def write(path: String, value: String): Unit = {
-    var retries = 0;
+    var retries = 0
     while (true) {
       try {
         val stat = Option(zk.exists(path, false))
         stat match {
           // convert the string value to a byte array
-          case Some(_) ⇒ zk.create(path, value.getBytes(ActiveKeyValueStore.CHARSET), Ids.OPEN_ACL_UNSAFE, CreateMode
+          case None ⇒ zk.create(path, value.getBytes(ActiveKeyValueStore.CHARSET), Ids.OPEN_ACL_UNSAFE, CreateMode
             .PERSISTENT)
-          case None ⇒ zk.setData(path, value.getBytes(ActiveKeyValueStore.CHARSET), -1)
+          case Some(_) ⇒ zk.setData(path, value.getBytes(ActiveKeyValueStore.CHARSET), -1)
           // version set as -1 to override any existing versions
         }
       } catch {

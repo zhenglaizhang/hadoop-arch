@@ -62,3 +62,11 @@ java net.zhenglai.zk.ListGroup localhost zoo
 
 zkCli.sh -server localhost ls /zoo
 
+
+
+export CLASSPATH=.:target/classes/:$ZOOKEEPER_HOME/*:$ZOOKEEPER_HOME/lib/*:$ZOOCFGDIR
+scala net.zhenglai.zk.ResilientConfigUpdater localhost
+scala net.zhenglai.zk.ConfigWatcher localhost
+
+zk> get /config
+

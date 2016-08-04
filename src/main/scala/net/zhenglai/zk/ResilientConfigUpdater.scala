@@ -23,6 +23,8 @@ class ResilientConfigUpdater(hosts: String) {
         val value = random.nextInt(100).toString
         store.write(PATH, value)
         printf("Set %s to %s\n", PATH, value)
+        System.out.printf("Set %s to %s\n", PATH, value)
+        System.out.flush()
         TimeUnit.SECONDS.sleep(random.nextInt(10))
       } catch {
         case _: KeeperException.SessionExpiredException ⇒
