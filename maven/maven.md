@@ -97,7 +97,7 @@ These are the most common default lifecycle phases executed.
 There are two other Maven lifecycles of note beyond the default list above. They are
 
 * **clean**: cleans up artifacts created by prior builds
-* **site**: generates site documentation for this project
+* **site**: generates site documentation for this project, POM has enough information to generate a web site for your project
 
 Phases are actually mapped to underlying goals.** The specific goals executed per phase is dependant upon the packaging type of the project.** For example, package executes `jar:jar` if the project type is a JAR, and `war:war` if the project type is - you guessed it - a WAR.
 
@@ -143,3 +143,31 @@ Finally, we could start building
 * Maven downloads more dependencies this time. These are the dependencies and plugins necessary for executing the tests (it already has the dependencies it needs for compiling and won't download them again).
 
 `mvn test-compile` will only compile the test resources
+
+
+----
+
+`mvn package`
+If you take a look at the POM for your project you will notice the packaging element is set to jar. This is how Maven knows to produce a JAR file from the above command (we'll talk more about this later). You can now take a look in the ${basedir}/target directory and you will see the generated JAR file.
+
+----
+
+`mvn install`
+Now you'll want to install the artifact you've generated (the JAR file) in your local repository (`${user.home}/.m2/repository` is the default location)
+
+Note that the **surefire** plugin (which executes the test) looks for tests contained in files with a particular naming convention. By default the tests included are:
+
+* `**/*Test.java`
+* `**/Test*.java`
+* **/*TestCase.java
+And the default excludes are:
+
+* **/Abstract*Test.java
+* **/Abstract*TestCase.java
+
+----
+
+`mvn idea:idea`
+`mvn eclipse:eclipse`
+
+Presently, **jar:jar will not recompile sources** - it will simply just create a JAR from the target/classes directory, under the assumption everything else had already been done.
