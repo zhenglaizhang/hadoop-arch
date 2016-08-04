@@ -153,3 +153,67 @@ The ZooKeeper object transitions through different states in its lifecycle
 ![](.zk_images/zk_state_transition.png)
 
 A ZooKeeper Watcher object serves double duty: it can be used to be notified of changes in the ZooKeeper state (as described in this section), and it can be used to be notified of changes in znodes
+
+
+## Usage Patterns
+
+### Group Membership
+
+###  A Configuration Service
+
+ZooKeeper can act as a highly available store for configuration, allowing application participants to retrieve or update configuration files
+
+### A Lock Service
+
+* A distributed lock is a mechanism for providing mutual exclusion between a collection of processes
+* **leader election** in a large distributed system, where the leader is the process that holds the lock at any point in time.
+* (/leader); then, clients that want to acquire the lock create sequential ephemeral znodes as children of the lock znode. At any point in time, the client with the lowest sequence number holds the lock.
+* The ZooKeeper service is the arbiter of order because it assigns the sequence numbers.
+* The pseudiocode for the lock acquisition is as below:
+    1. Create an ephemeral sequential znode named lock- under the lock znode, and remember
+    its actual pathname (the return value of the create operation).
+    2. Get the children of the lock znode and set a watch.
+    3. If the pathname of the znode created in step 1 has the lowest number of the children
+    returned in step 2, then the lock has been acquired. Exit.
+    4. Wait for the notification from the watch set in step 2, and go to step 2.
+* The **herd effect**
+    * The “herd effect” refers to a large number of clients being notified of the same event when only a small number of them can actually proceed.
+    * a client needs to be notified only when the child znode with the previous sequence number goes away, not when any child znode is deleted (or created).
+* Recoverable exceptions
+    * Creating a sequential znode is a nonidempotent operation, so we can’t simply retry,
+    * By embedding an identifier in the znode name, if it suffers a connection loss,
+    * The client’s session identifier is a long integer that is unique for the ZooKeeper service and therefore ideal for the purpose of identifying a client across connection loss events
+    `ZooKeeper.getSessionId()`
+    * The ephemeral sequential znode should be finally created by `lock-<sessionId>-<sequenceNumber>`
+* Unrecoverable exceptions
+    * If a client’s ZooKeeper session expires, the ephemeral znode created by the client will be deleted
+    * The application using the lock should realize that it no longer holds the lock, clean up its state, and then start again by creating a new lock object and trying to acquire it. Notice that it is the application that controls this process
+    * ZooKeeper comes with a production-quality lock implementation in Java called `WriteLock`
+
+### More distributed data structures
+
+these are synchronous protocols, even though we use asynchronous ZooKeeper primitives (such as notifications) to build them.
+
+* barriers
+* queues 
+* two-phase commit
+* Apache Curator
+
+
+### BookKeeper and Hedwig
+
+* BookKeeper is a highly available and reliable logging service. It can be used to provide write-ahead logging, which is a common technique for ensuring data integrity in storage systems.
+* we don’t have to write the data to permanent storage after every write operation, because in the event of a system failure, the latest state may be recovered by replaying the transaction log for any writes that were not applied.
+* BookKeeper is a replicated log service which can be used to build replicated state machines. A log contains a sequence of events which can be applied to a state machine. BookKeeper guarantees that each replica state machine will see all the same entries, in the same order.
+* Hedwig is a topic-based ipublish-subscribe system built on BookKeeper
+
+
+### Resilience and Performance
+
+* ZooKeeper machines should be located to minimize the impact of machine and network failure. In practice, this means that servers should be spread across racks, power supplies, and switches, so that the failure of any one of these does not cause the ensemble to lose a majority of its servers.
+* **observer node** (non voting follower)
+    * Because they do not participate in the vote for consensus during write requests
+    * Observers can be used to good advantage to allow a ZooKeeper cluster to span data centers without impacting latency as much as regular voting followers. This is achieved by placing the voting members in one data center and observers in the other.
+* ZooKeeper should run on machines that are dedicated to ZooKeeper alone.
+* Configure ZooKeeper to keep its transaction log on a different disk drive from its snapshots
+* by setting the Java heap size to less than the amount of unused physical memory on the machine to avoid process swaps to disk
