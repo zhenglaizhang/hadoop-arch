@@ -39,3 +39,7 @@
 * Each region will have a start key and an end key that will define its boundaries.
 * All this information will be stored within the files into the region but also into the hbase:meta table
 * When they become too big, regions can be split. They can also be merged if required.
+
+## Column family
+
+* For the same region, different column families will store the data into different files and can be configured differently. **Data with the same access pattern and the same format should be grouped into the same column family**.
