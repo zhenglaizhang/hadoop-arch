@@ -13,6 +13,13 @@ hbase shell
 > help
 
 
+# view active/dead servers and average load
+> status
+
+
+# list all tables
+> list
+
 
 # create test table with data cf
 > create 'test', 'data'
