@@ -217,3 +217,10 @@ these are synchronous protocols, even though we use asynchronous ZooKeeper primi
 * ZooKeeper should run on machines that are dedicated to ZooKeeper alone.
 * Configure ZooKeeper to keep its transaction log on a different disk drive from its snapshots
 * by setting the Java heap size to less than the amount of unused physical memory on the machine to avoid process swaps to disk
+
+
+### Run ZK app from terminal
+
+In Java, when you sometimes run the JVM from the command line using the java executable and are trying to start a program from a class file with public static void main (PSVM), you might run into the below error even though the classpath parameter to the JVM is accurate and the class file is present on the classpath:
+`Error: main class not found or loaded`
+This happens if the class file with PSVM could not be loaded. One possible reason for that is that the class may be implementing an interface or extending another class that is not on the classpath. Normally if a class is not on the classpath, the error thrown indicates as such. But, if the class in use is extended or implemented, java is unable to load the class itself.

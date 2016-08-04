@@ -34,26 +34,31 @@ zkCli
 
 
 
+export CLASSPATH=.:target/classes/:$ZOOKEEPER_HOME/*:$ZOOKEEPER_HOME/lib/*:$ZOOCFGDIR:/Users/Zhenglai/.m2/repository/org/apache/avro/avro-tools/1.8.1/avro-tools-1.8.1.jar
 # demo group membership
-% java CreateGroup localhost zoo
-% java ListGroup localhost zoo
-% java JoinGroup localhost zoo duck &
-% java JoinGroup localhost zoo duck &
-% java JoinGroup localhost zoo goat &
-% goat_pid=$!
+java net.zhenglai.zk.CreateGroup localhost zoo
+java net.zhenglai.zk.ListGroup localhost zoo
+java net.zhenglai.zk.ListGroup localhost zookeeper/quota
+java net.zhenglai.zk.JoinGroup localhost zoo duck &
+java net.zhenglai.zk.JoinGroup localhost zoo duck &
+java net.zhenglai.zk.JoinGroup localhost zoo goat &
+goat_pid=$!
 # The last line saves the process ID of the Java process running the program that adds goat as a member.
 
-% java ListGroup localhost zoo
-% kill $goat_pid
+java net.zhenglai.zk.ListGroup localhost zoo
+kill $goat_pid
 # And a few seconds later, it has disappeared from the group because the process’s Zoo‐
 #Keeper session has terminated (the timeout was set to 5 seconds) and its associated
 #ephemeral node has been removed:
-% java ListGroup localhost zoo
+java net.zhenglai.zk.ListGroup localhost zoo
 
 
-% java DeleteGroup localhost zoo
-% java ListGroup localhost zoo
+java net.zhenglai.zk.DeleteGroup localhost zoo
+java net.zhenglai.zk.ListGroup localhost zoo
 # Group zoo does not exist
 
-% zkCli.sh -server localhost ls /zoo
+# kill another 2 join group jvm instances
+\jps
+
+zkCli.sh -server localhost ls /zoo
 
