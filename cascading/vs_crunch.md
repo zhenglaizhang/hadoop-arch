@@ -1,0 +1,11 @@
+
+# So...how is this different from Cascading? Pig? Hive?
+  
+The main difference between Crunch and Cascading/Pig/Hive is in their **data models**. In Pig and Cascading, most operations in a pipeline are performed on collections of Tuples (here are the Javadocs for the **Pig Tuple and the Cascading Tuple**). In my answer to this question on Quora, I refer to this as the **"single serializable type" (SST) model**. Using the SST data model makes it much easier to implement common operations, and Pig, and Cascading provide big libraries of built-in functions that are designed to operate on their respective Tuple types. They also provide APIs for developers to create their own user-defined functions that interact with their SST data models.
+
+Crunch, like the FlumeJava library that is based on, **uses a data model that has multiple serializable types (MST). At each stage in a Crunch pipeline, you specify how the data from that stage should be serialized.** The benefit of doing this is that it **lets you verify at compile-time that each stage of your pipeline will actually receive the type of data it knows how to process. In this sense, the MST model for building pipelines is similar to using a statically typed language, and the SST model is similar to using a dynamically typed language**. We feel that the MST model has definite benefits for MapReduce developers:
+
+**Compile-time type verification** lowers the probability that a type error will cause your MapReduce pipeline to fail when it actually runs on a Hadoop cluster.
+It makes user-defined functions in Crunch extremely easy to write, saving you from writing the boilerplate for type checking your data that you need to do in Pig or Cascading.
+It makes MapReduces that run over complex data types, like binary data or the results of an HBase scan, much easier to write. There's no work required to map from the complex type onto the Cascading/Pig SST and back again.
+Crunch's MST serialization model currently has two different implementations, **one based on Writables and the other based on Avro records.**
