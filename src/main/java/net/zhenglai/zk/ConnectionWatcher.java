@@ -24,6 +24,10 @@ public class ConnectionWatcher implements Watcher {
         connectedSignal.await();
     }
 
+    /*
+    An alternative way of dealing with session expiry would be to look for a KeeperState
+of type Expired in the watcher (that would be the ConnectionWatcher
+     */
     @Override
     public void process(WatchedEvent event) {
         if (event.getState() == Event.KeeperState.SyncConnected) {
