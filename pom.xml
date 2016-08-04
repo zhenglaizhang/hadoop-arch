@@ -7,6 +7,8 @@
     <groupId>net.zhenglai</groupId>
     <artifactId>hadoop-arch</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>Hadoop Architecture</name>
+    <packaging>jar</packaging>
 
 
     <properties>
