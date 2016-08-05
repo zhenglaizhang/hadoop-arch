@@ -98,3 +98,56 @@ protected void reduce(
 * This could potentially mean that all reduce tasks talk to all regions on the cluster.
 
 ![](.05_hbase_distributed_images/hbase_mr_reduce.png)
+
+
+### Reduce-Side Join
+
+* A reduce-side join takes advantage of the intermediate Shuffle Step to collocate relevant records from the two sets
+* One big problem with the reduce-side join is that it requires all [k2,v2] tuples to be shuffled and sorted
+
+### Map-Side Join
+
+* Minimizing this network I/O will improve join performance. This is where the map-side join can help
+* It assumes the map tasks can look up random values from one dataset while they iterate over the other
+* For instance, each map task is processing a single split, which is equal to one HDFS block (typically 64–128 MB), but the join dataset that it loads into memory is 1 GB. Now, 1 GB can certainly fit in memory, but the cost involved in creating a hash-table for a 1 GB dataset for every 128 MB of data being joined makes it not such a good idea.
+
+### MAP-SIDE JOIN WITH HBASE
+
+* We originally described HBase as a giant hash-table
+* Using HBase as a lookup store for the map tasks to do a map-side join
+
+```python
+map_timespent(line_num, line):
+    users_table = HBase.connect("Users")
+    userid, timespent = split(line)
+    record = {"TimeSpent" : timespent}
+    record = merge(record, users_table.get(userid, "info:twitcount"))
+    emit(userid, ratio(record["TimeSpent"], record["info:twitcount"]))
+```
+
+![](.05_hbase_distributed_images/map_join_hbase.png)
+
+
+### Idempotent operations
+
+* Hadoop MapReduce assumes your map and reduce tasks are idempotent. 
+* You must take care, then, when performing stateful operations, e.g. HBase’s Increment command
+* Row counting
+    * Instead of incrementing the counter in the mapper, a better approach is to emit ["count",1] pairs from each mapper. 
+
+
+#### speculative execution
+
+* it should be disabled if the MapReduce jobs are designed to interact with HBase.
+* It is generally advisable to turn off speculative execution for MapReduce jobs that use HBase as a source. This can either be done on a per-Job basis through properties, on on the entire cluster. Especially for longer running jobs, speculative execution will create duplicate map-tasks which will double-write your data to HBase; this is probably not what you want.
+
+
+----
+
+You don’t want to run MapReduce jobs on the same cluster that serves your low-latency queries, at least not when you expect to maintain OLTP-style service-level agreements (SLAs)!
+
+Data in HBase is partitioned and replicated like any other data in the HDFS
+
+
+
+
