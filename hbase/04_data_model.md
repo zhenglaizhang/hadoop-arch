@@ -121,6 +121,26 @@ Get, Put, Delete, Scan, and **Increment**
 ![](.04_data_model_images/decreasing_precision_key.png)
 
 
+## Data Models
+
+* RDBMS - These systems require strict rules around tables, columns, and data types—the **shape** of your data. Data conforming to these strict requirements is called **structured** data.
+* HBase is designed for data without such a strict shape, called
+  **semi-structured shape**
+* HBase takes advantage of the semistructured shape of the data it stores. As systems evolve, these assumptions in the physical model influence the logical.
+* In particular, HBase can’t enforce relational constraints or provide multirow transactions
+
+
+### Logical model: sorted map of maps
+
+* `Map<RowKey, Map<ColumnFamily, Map<ColumnQualifier, Map<Version, Data>>>>`
+* sorted map of maps. The example shows only a single record, but even there the
+  sorting is present. Notice the two versions in the password cell. The newest
+  version is sorted before the later versions.
+* HBase sorts the version timestamp in **descending** order so the newest data is always on top. This physical design decision results in slightly faster access to recent versions. The other map keys are sorted in ascending order.
+* This sorting business turns out to be a critical consideration when designing HBase table schema in practice
+
+![](.04_data_model_images/sorted_map_of_map.png)
+
 
 
 
