@@ -43,3 +43,47 @@
 ## Column family
 
 * For the same region, different column families will store the data into different files and can be configured differently. **Data with the same access pattern and the same format should be grouped into the same column family**.
+
+
+## Stores
+* one store per column family. A store object regroups one memstore and zero or more store files (called HFiles).
+
+
+## HFiles
+* HFiles are created when the memstores are full and must be flushed to disk. HFiles are eventually compacted together over time into bigger files.
+* HFiles are composed of different types of blocks (e.g., **index blocks and data blocks)**. HFiles are stored in HDFS, so they benefit from Hadoop persistence and replication.
+
+
+## HBase Roles
+
+* HBase also relies on ZooKeeper to monitor the health of its servers,
+* There is work in progress in HBase 2.0 to reduce its dependency on ZooKeeper.
+* Recent HDFS versions allow more than two NameNodes
+
+![Services layout for an ideal deployment](.02_hbase_principles_images/services_layout_idea_deployment.png)
+
+## Master Server
+
+* only a single master will be active at a time
+* HBase Master doesn’t have much workload and can be installed on servers with less memory and fewer cores
+* HBase Master doesn’t have much workload and can be installed on servers with less memory and fewer cores
+* it is best to build more robust HBase Masters (NameNodes, ZK etc. master services) OS on RAID drives, dual power supply
+* A cluster can survive without a master server as long as there is no RegionServer failing nor regions splitting
+
+
+## Region Server
+
+* When required (e.g., to read and write data into a specific region), calls from the Java API can go directly to the RegionServer
+* A RegionServer will decide and handle the splits and the compactions but will report the events to the master. HMaster only monitoring the completion of this
+* When a client tries to read data from HBase for the first time, it will first go to ZooKeeper to find the master server and locate the hbase:meta region where it will locate the region and RegionServer it is looking for. In subsequent calls from the same client to the same region, all those extra calls are skipped, and the client will talk directly with the related RS.
+* Unlike the Java client that can talk to any RegionServer, a C/C++ client using a Thrift server can talk only to the Thrift server.
+
+## Try REST server
+
+```bash
+create 't1', 'f1'
+put 't1', 'r1', 'f1:c1', 'val1'
+curl -H "Accept: text/xml" http://localhost:8080/t1/r1/f1:c1
+$ echo "dmFsMQ==" | base64 -d
+curl -H "Accept: application/octet-stream" http://localhost:8080/t1/r1/f1:c1
+```
