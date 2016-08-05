@@ -84,4 +84,17 @@ protected void map(
     Context context) {
   //  ...
 }
+
+
+protected void reduce(
+    ImmutableBytesWritable rowkey,
+    Iterable<Put> values,
+    Context context) {
+//...
+}
 ```
+
+* They will write to whichever region contains the key range that they are writing into. 
+* This could potentially mean that all reduce tasks talk to all regions on the cluster.
+
+![](.05_hbase_distributed_images/hbase_mr_reduce.png)
