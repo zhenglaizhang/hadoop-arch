@@ -196,8 +196,39 @@ Get, Put, Delete, Scan, and **Increment**
 
 
 
+## Atomic operations
+
+* Increment Column Value (ICV).
+* This command allows you to change an integral value stored in an HBase cell without reading it back first
+* fast and avoids a possible race condition
+* same like Java's `AtomicLong.addAndGet()`
+* `incrementColumnValue` & `checkAndPut` & `checkAndDelete`
 
 
+## Recap
+
+* HBase is a database designed for semistructured data and horizontal scalability. It stores data in tables. 
+* Within a table, data is organized over a four-dimensional coordinate system: rowkey, column family, column qualifier, and version
+* Schema-less and type-less
+* basic commands: `Get, Put, Delete, Scan and Increment`
+* The only way to query HBase based on non-rowkey values is by a **filtered scan.**
+* Operations are row-level atomic
+* Interrow operations are not atomic
+* checkAnd* and increment* operations are atomic.
+* Multiple write operations to a given row are always independent of each other in their entirety. This is an extension of the first point.
+* A scan across a table is not a scan over a snapshot of the table at any point
+* But the data read by the scanner is consistent and contains the complete row at the time it’s read.
+* Ideally, the tables in your schema are organized according to these patterns
+* The rowkey is the only fully indexed coordinate in HBase, so queries are often implemented as rowkey scans.
+* Compound rowkeys
+    * MD5
+    * SHA1
+
+----
+
+The data model is logically organized as either a key-value store or as a sorted map of maps.
+The physical data model is column-oriented along column families and individual records
+are stored in a key-value style
 
 
 
