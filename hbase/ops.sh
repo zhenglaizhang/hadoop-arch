@@ -59,6 +59,7 @@ hbase(main):011:0> list
 
 > scan 'mytable', {STARTROW => 'abc', ENDROW => 'ggg'}
 
+> create 'test_table_version_2', {NAME => 'colfam1', VERSIONS => 10 , MIN_VERSIONS => '1' , TTL => '18000' }
 
 # run hbase app
 export HBASE_CLASSPATH=target/hadoop-arch.jar

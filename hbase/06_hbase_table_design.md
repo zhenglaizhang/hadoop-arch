@@ -119,3 +119,12 @@
 ![](.06_hbase_table_design_images/twit_streams.png)
 
 * When someone creates a twit, all their followers should get that twit in their respective streams. This can be accomplished using **coprocessors**
+
+
+
+
+## Advanced Configuration
+
+
+### Compression
+
