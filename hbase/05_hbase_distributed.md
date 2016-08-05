@@ -69,3 +69,19 @@ Hadoop MapReduce provides a distributed computation framework for highthroughput
 #### How client interacts with HBase
 
 ![](.05_hbase_distributed_images/client_interacts.png)
+
+
+## HBase and MapReduce
+
+* HBase can be used as a **data source** at the beginning of a job, as a **data sink** at the end of a job, or as a **shared resource** for your tasks
+
+![](.05_hbase_distributed_images/hbase_mr.png)
+
+```java
+protected void map(
+    ImmutableBytesWritable rowkey,
+    Result result,
+    Context context) {
+  //  ...
+}
+```
