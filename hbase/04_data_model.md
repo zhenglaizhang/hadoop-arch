@@ -142,16 +142,27 @@ Get, Put, Delete, Scan, and **Increment**
 ![](.04_data_model_images/sorted_map_of_map.png)
 
 
+### Physical model: column family oriented
+
+* Column families are also expressed physically. 
+* Each column family gets its own set of HFiles on disk. 
+* This physical isolation allows the underlying HFiles of one column family to be managed in isolation of the others. 
+* As far as compactions are concerned, the HFiles for each column family are managed independently 
+* Records in HBase are stored in the HFiles as key-value pairs. The HFile itself is a binary file
+* Notice that Mark’s row consumes multiple records in the HFile. **Each column qualifier and version gets its own record**. Also, notice there are no unused or null records.
+* storage in the column family is column-oriented
+![](.04_data_model_images/hfile_structure_01.png)
 
 
 
+![](.04_data_model_images/region_table.png)
 
 
-
-
-
-
-
+* Data from a single column family for a single row need not be stored in the same HFile. Mark’s info data could be spread across any number of HFiles. The only requirement is that within an HFile, data for a row’s column family is stored together
+* Using separate HFiles for each column family means HBase doesn’t need to read all the data for a row when performing a read.
+* Being column- oriented means HBase need not read over placeholder entries when looking for a specific cell.
+* efficient storage and fast reads of sparse datasets
+* interacting with data in different column families involves completely separate MemStores and HFiles
 
 
 
