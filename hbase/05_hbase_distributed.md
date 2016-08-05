@@ -149,5 +149,42 @@ You don’t want to run MapReduce jobs on the same cluster that serves your low-
 Data in HBase is partitioned and replicated like any other data in the HDFS
 
 
+## Availability and reliability at scale
+
+### AVAILABILITY
+
+**Availability** in the context of HBase can be defined as the ability of the system to handle failures
+
+* Any such node failure can be considered a network partition between that node and the rest of the cluster
+* availability is best defined by the kind of failures a system can handle and the kind it can’t
+    * ResionServer partition?
+    * HMaster partition?
+    * ZK partition?
+
+Higher availability can be achieved through defensive deployment schemes. For instance, if you have multiple masters, keep them in different racks.
 
 
+###  RELIABILITY AND DURABILITY
+
+Reliability is a general term used in the context of a database system and can be thought of as a combination of data durability and performance guarantees in most cases.
+
+### HDFS as the underlying storage
+
+* Single namespace
+    * HBase stores its data on a single file system
+    * It assumes all the RegionServers have access to that file system across the entire cluster 
+    * The file system exposes a single namespace to all the RegionServers in the cluster.
+    * The data visible to and written by one RegionServer is available to all other RegionServers.
+    
+![](.05_hbase_distributed_images/hbase_hdfs_ha.png)
+
+
+* HDFS provides HBase with a single namespace, and the DataNodes and RegionServers are collocated in most clusters. 
+* Collocating these two processes helps in that RegionServers can read and write to the local DataNode, thereby saving network I/O whenever possible
+
+
+### RELIABILITY AND FAILURE RESISTANCE
+
+* HBase assumes that the data it persists on the underlying storage system will be accessible even in the face of failures
+* The assumption is that the server going down won’t cause data loss on the underlying storage.
+* HDFS provides certain write semantics that HBase uses to provide durability guarantees for every byte you write to it.
