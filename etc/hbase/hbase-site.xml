@@ -51,4 +51,9 @@
         <name>hbase.client.scanner.caching</name>
         <value>100</value>
     </property>
+    <!--The size of individual regions is governed, When a region becomes bigger than that size (as you write more data into it), it gets split into two regions.-->
+    <property>
+        <name>hbase.hregion.max.filesize</name>
+        <value>10737418240</value>
+    </property>
 </configuration>
