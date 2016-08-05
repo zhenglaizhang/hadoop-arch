@@ -1,6 +1,16 @@
 
 ## logical data model
 
+* Table names are Strings and composed of characters that are safe for use in a file system path.
+* Rowkeys don’t have a data type and are always treated as a byte[].
+* Column families also impact the physical arrangement of data stored in HBase.
+* Column families also impact the physical arrangement of data stored in HBase. For this reason, they must be defined up front and aren’t easily modified. Every row in a table has the same column families, 
+* Column family names are Strings and composed of characters that are safe for use in a file system path. 
+* Cell—A combination of rowkey, column family, and column qualifier uniquely identifies a cell.
+* Values within a cell are versioned.
+* A unique data value in HBase is accessed by way of its coordinates. The complete coordinates to a value are **rowkey, column family, column qualifier, and version**
+
+
 ```bash
 # create users table with info CF & default parameters
 create 'users', 'info
