@@ -87,3 +87,18 @@
     * To make the user ID accessible, you can put it into the column qualifier and the name into the cell value.
 
 ![](.06_hbase_table_design_images/md5_rowkey.png)
+
+### Target data access
+
+* Only the keys (the Key part of the KeyValue object, consisting of the rowkey, column qualifier, and timestamp) are indexed in HBase tables.
+* the key is a compound of three data elements (rowkey, column qualifier, and timestamp). The only way to access a particular row is through the **rowkey**
+* Indexing the qualifier and timestamp lets you skip to the right column without scanning all the previous columns in that row.
+* The KeyValue object that you get back is basically a row from the HFile,
+
+![](.06_hbase_table_design_images/table_logic_physical.png)
+
+![](.06_hbase_table_design_images/perf_diff.png)
+
+* If you specify timestamps in your Get object, you can avoid reading HFiles that are older than that timestamp 
+* Putting data into the cell value occupies the same amount of storage space as putting it into the column qualifier or the rowkey. But you can possibly achieve better performance by moving it up from the cell to the rowkey
+* The downside to putting more in the rowkey is a **bigger block index**, given that the keys are the only bits that go into the index
