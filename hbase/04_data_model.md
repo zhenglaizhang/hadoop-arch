@@ -88,6 +88,14 @@ Get, Put, Delete, Scan, and **Increment**
 
 
 
+### Versioned data
+
+* being a schema-less database, HBase is also versioned
+* Every time you perform an operation on a cell, HBase implicitly stores a new version. Creating, modifying, and deleting a cell are all treated identically; they’re all new versions.
+* The version is used as the final coordinate when accessing a specific cell value. HBase uses the current time4 in milliseconds when a version isn’t specified
+* By default, HBase stores only the last three versions; this is configurable per column family
+* When a cell exceeds the maximum number of versions, the extra records are dropped during the next major compaction.
+
 
 
 
