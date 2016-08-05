@@ -165,6 +165,14 @@ Get, Put, Delete, Scan, and **Increment**
 * interacting with data in different column families involves completely separate MemStores and HFiles
 
 
+## Table Scan
+
+* Scan command to read across some portion of the table, applying a filter to retrieve only the relevant records
+* the records returned while scanning are presented in sorted order
+* e.g. Provide the Scan constructor with start and end rows 
+
+
+
 
 
 
