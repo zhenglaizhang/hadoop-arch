@@ -67,3 +67,55 @@ COLUMN FAMILIES DESCRIPTION
 Get, Put, Delete, Scan, and **Increment**
 
 ## physical data model
+
+
+### Compactions: HBase housekeeping
+
+`vim visually select inner word)`
+* **Delete** command writes a new “tombstone” record is written for that value, marking it as deleted.
+* Because **HFiles are immutable**, it’s not until a **major compaction** runs that these tombstone records are reconciled and space is truly recovered from deleted records.
+* Compactions come in two flavors: minor and major
+* A minor compaction folds HFiles together, creating a larger HFile from multiple smaller HFiles,
+* this process can require a lot of disk IO. What’s less clear is that it can also cause network IO.
+* HBase decides which HFiles to compact based on their number and relative sizes.
+* Restricting the number of HFiles is important for read performance, because all of them must be referenced to read a complete row. During the compaction, HBase reads the content of the existing HFiles, writing records into a new one.
+* there is an upper limit on the number of HFiles involved
+
+![](.04_data_model_images/minor_compaction.png)
+
+* When a compaction is run simultaneously over **all HFiles in a column family**, it’s called a major compaction.
+* Major compactions are the only chance HBase has to clean up deleted records. Resolving a delete requires removing both the deleted record and the deletion marker. There’s no guarantee that both the record and marker are in the same HFile. A major compaction is the only time when HBase is guaranteed to have access to both of these entries at the same time.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
