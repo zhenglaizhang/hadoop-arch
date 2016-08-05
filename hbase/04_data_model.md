@@ -45,6 +45,24 @@ COLUMN FAMILIES DESCRIPTION
 
 ![](.04_data_model_images/hbase_write_path.png)
 
+### the HBase read path
+
+* As a general rule, if you want fast access to data, keep it ordered and keep as much of it as possible in memory
+* A read against HBase must be **reconciled between the persisted HFiles and the data still in the MemStore**
+* HBase has an LRU cache for reads. This cache, also called the **BlockCache**, sits in the JVM heap alongside the MemStore.
+* The _BlockCache is designed to keep frequently accessed data from the HFiles in memory_ so as to avoid disk reads. 
+* Each column family has its own BlockCache.
+* The “Block” in BlockCache is _the unit of data that HBase reads from disk in a single pass_. 
+* The HFile is physically laid out as **a sequence of blocks plus an index over those blocks**
+* The block is the smallest indexed unit of data and is the smallest unit of data that can be read from disk.
+* If you primarily perform random lookups, you likely want a more granular block index, so a smaller block size is preferred. Having smaller blocks creates a larger index and thereby consumes more memory.
+* If you frequently perform sequential scans, reading many blocks at a time, you can afford a larger block size. This allows you to save on memory
+* HFiles contain a snapshot of the MemStore at the point when it was flushed.
+* Data for a complete row can be stored across multiple HFiles
+* HBase must read across all HFiles that might contain information for that row in order to compose the complete record.
+
+![](.04_data_model_images/read_reconcile.png)
+
 ### Commands
 Get, Put, Delete, Scan, and **Increment**
 
