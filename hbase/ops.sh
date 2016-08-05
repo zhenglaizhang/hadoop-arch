@@ -57,6 +57,9 @@ hbase(main):011:0> list
 > count 'test'
 
 
+> scan 'mytable', {STARTROW => 'abc', ENDROW => 'ggg'}
+
+
 # run hbase app
 export HBASE_CLASSPATH=target/hadoop-arch.jar
 hbase net.zhenglai.hbase.ExampleClientOldApi

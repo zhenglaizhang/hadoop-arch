@@ -102,3 +102,20 @@
 * If you specify timestamps in your Get object, you can avoid reading HFiles that are older than that timestamp 
 * Putting data into the cell value occupies the same amount of storage space as putting it into the column qualifier or the rowkey. But you can possibly achieve better performance by moving it up from the cell to the rowkey
 * The downside to putting more in the rowkey is a **bigger block index**, given that the keys are the only bits that go into the index
+
+
+
+## De-normalization
+
+* The region hosting the popular user’s twits is constantly answering requests because you’ve created a read hot spot. 
+* The way to solve that is to maintain a twit stream for every user in the system
+* From a performance standpoint, normalization optimizes for writes, and de-normalization optimizes for reads.
+
+![](.06_hbase_table_design_images/norm_denorm.png)
+
+* retention policy for the twit stream
+* putting the user ID and the reverse timestamp in the rowkey makes sense
+
+![](.06_hbase_table_design_images/twit_streams.png)
+
+* When someone creates a twit, all their followers should get that twit in their respective streams. This can be accomplished using **coprocessors**
