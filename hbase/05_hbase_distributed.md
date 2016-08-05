@@ -188,3 +188,10 @@ Reliability is a general term used in the context of a database system and can b
 * HBase assumes that the data it persists on the underlying storage system will be accessible even in the face of failures
 * The assumption is that the server going down won’t cause data loss on the underlying storage.
 * HDFS provides certain write semantics that HBase uses to provide durability guarantees for every byte you write to it.
+
+
+## Recap
+
+* HBase is an online system driven by low latency, Hadoop is an offline system optimized for throughput.
+* Individual tasks are assumed to be idempotent.
+* TableMapper & TableReducer
