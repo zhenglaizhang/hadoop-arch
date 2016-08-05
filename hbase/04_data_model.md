@@ -108,6 +108,18 @@ Get, Put, Delete, Scan, and **Increment**
 
 
 
+## Data coordinates
+
+![](.04_data_model_images/data_coordinate.png)
+
+* HBase stores a piece of data in a table based on a 4D coordinate system
+* The coordinates used by HBase, in order, are rowkey, column family, column qualifier, and version
+![](.04_data_model_images/kv_store_logic_view.png)
+
+* By providing decreasingly specific coordinates in your request, HBase allows you to request more data in a single operation
+
+![](.04_data_model_images/decreasing_precision_key.png)
+
 
 
 
