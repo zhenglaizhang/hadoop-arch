@@ -172,6 +172,28 @@ Get, Put, Delete, Scan, and **Increment**
 * e.g. Provide the Scan constructor with start and end rows 
 
 
+## Designing tables for scans
+
+* designing schema for HBase tables requires that you consider the **data shape and access patterns**.
+* You’ll need a unique value for the rowkey, so let’s try the **username plus the timestamp**.
+* user ID is a variable-length string, let's hash the portion of the rowkey that
+  is of variable length, MD5 is a good choice
+* MD5 is a good choice because you want twits to be stored in groups by user.
+  Those groups can be stored in any order. MD5 is a one-way hash;
+* you’ll want the most recent twits first. You know that HBase stores rows in sorted order by rowkey in its physical data model.
+* By including the timestamp of the twit in the rowkey and multiplying it by -1,
+  you have the most recent twits first.
+* Rowkey design is critical in HBase schema
+* It effectively creates buckets of data by user in the natural ordering of rows. All data from one user is in continuous rows.
+* Scanners return records inclusive of the start key and exclusive of the end key,
+
+### Scanner caching
+
+* A scan can be configured to retrieve a batch of rows in every RPC call it makes to HBase
+* But setting the value too high would mean that the client’s interaction with HBase would have longer pauses, and this could result in timeouts on HBase’s side.
+* A **`filter`** is a predicate that executes in HBase instead of on the client
+* Filters in HBase can be applied to rowkeys, column qualifiers, or data values.
+
 
 
 
