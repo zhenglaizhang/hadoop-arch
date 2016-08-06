@@ -128,3 +128,11 @@
 
 ### Compression
 
+
+
+## Fitering Data
+
+* filter
+* push-down predicates
+
+![](.06_hbase_table_design_images/filter.png)
