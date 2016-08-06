@@ -38,3 +38,41 @@
 * It doesn't have many ready-made producers and consumers
 * No data transformations
 * No encryption, authorization or authentication (yet)
+
+### The Basics
+
+* Messages are organized into **topics**
+* **Producers** push messages
+* **Consumers** pull messages
+* Kafka runs in a cluster, Nodes are called **brokers**
+
+`topic -> partition -> unique offset in the partition`
+
+![](.kafka-intro_images/5f608116.png)
+
+### Each partition as log
+
+![](.kafka-intro_images/partition_as_log.png)
+
+* Retention based on TTL 
+
+### Each Broker has many partitions
+
+* Producers load balance between partitions (leaders)
+
+![](.kafka-intro_images/broker_partitions.png)
+
+* Orange one is the leader, all reads and writes always goes to the leader, blues one are replications in case of leader failures
+* Leader replicates to folloers
+
+![](.kafka-intro_images/leader_follower.png)
+
+
+### Consumers
+
+![](.kafka-intro_images/consumers.png)
+
+* Consumers in one consumer group get different set of data from brokers
+* Lots of partitions allows add more consumers
+* Data is replicated to different consumer groups (ML + OLAP target should belongs 2 different consumer groups)
+* 
