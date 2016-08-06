@@ -72,10 +72,15 @@
             <version>3.2.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>util-collection_2.11</artifactId>
+            <version>6.35.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.twitter</groupId>
-            <artifactId>scalding-core_2.10</artifactId>
+            <artifactId>scalding-core_2.11</artifactId>
             <version>0.16.1-cascading3-RC1</version>
         </dependency>
         <dependency>
