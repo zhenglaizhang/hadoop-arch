@@ -20,4 +20,27 @@ sudo apt-get install oracle-java8-installer
 
 
 # git install
-sudo apt-get install gi
+sudo apt-get install git
+
+
+sudo dpkg -i DEB_PACKAGE
+sudo dpkg -r DEB_PACKAGE
+
+
+# cleanup package cache
+sudo apt-get autoclean
+sudo apt-get clean
+sudo apt-get autoremove
+
+sudo localepurge
+
+
+# install parallels desktop
+# mount the tools image
+sudo su
+apt-get install gcc make
+mkdir -p /media/cdrom
+mount /dev/cdrom /media/cdrom
+cd /media/cdrom
+./install
+
