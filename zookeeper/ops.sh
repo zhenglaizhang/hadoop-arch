@@ -5,7 +5,12 @@
 # One way of understanding ZooKeeper is to think of it as providing a high-availability filesystem.
 
 
+ ./zkServer.sh {start|start-foreground|stop|restart|status|upgrade|print-cmd}
+
 zkServer start
+
+$ ps –ef | grep zookeeper | grep –v grep | awk '{print $2}'
+$ ps –ef | grep [z]ookeeper | awk '{print $2}'
 
 \jps
 
@@ -29,10 +34,29 @@ echo wchp | nc localhost 2181
 echo mntr | nc localhost 2181
 
 
+zkCli -server localhost:2181
 bin/zkCli.sh -server 127.0.0.1:2181
 zkCli
+> create /hello "hello zookeeper"
+> create /hello2 ""
+> delete /hello2
+> get /hello
+> stat /hello
+> ls2 /hello
+
+create -e /ephemeralnode "gone"
 
 
+[zk: localhost:2181(CONNECTED) 0] create -s /[testsequence]- ""
+Created /[testsequence]0000000007
+[zk: localhost:2181(CONNECTED) 1] ls /
+[hello, ZooKeeper, 中文, zookeeper, config, [testsequence]-0000000007]
+[zk: localhost:2181(CONNECTED) 2] create -s -e /anothersequence- ""
+Created /anothersequence0000000008
+[zk: localhost:2181(CONNECTED) 3] ls /
+[ZooKeeper, 中文, zookeeper, hello, config, [testsequence]-0000000007, anothersequence-0000000008]
+
+zkCli.sh -server zoo1:2181,zoo2:2181,zoo3:2181
 
 export CLASSPATH=.:target/classes/:$ZOOKEEPER_HOME/*:$ZOOKEEPER_HOME/lib/*:$ZOOCFGDIR
 # demo group membership
