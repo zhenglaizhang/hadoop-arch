@@ -1,5 +1,13 @@
 
+## Apache Kafka publisher-subscriber messaging system
 
+* **Topic**: A topic is **a category or feed name** to which messages are published by the message producers. In Kafka, **topics are partitioned** and each partition is represented by the **ordered immutable sequence of messages**. A Kafka cluster maintains the partitioned log for each topic. Each message in the partition is assigned **a unique sequential ID called the offset**.
+* **Broker**: _A Kafka cluster consists of one or more servers where each one may have one or more server processes running and is called the broker_. Topics are created within the context of broker processes.
+* **Zookeeper**: ZooKeeper serves as the coordination interface between the Kafka broker and consumers.
+    * “ZooKeeper allows distributed processes to coordinate with each other through a shared hierarchical name space of data registers (we call these registers znodes), much like a file system.” 
+    * Different from znode can have data associated with it and znodes are limited to the amount of data that they can have. ZooKeeper was designed to store coordination data: status information, configuration, location information, and so on
+* **Producers**: Producers publish data to the topics by choosing the appropriate partition within the topic. For load balancing, the allocation of messages to the topic partition can be done in **a round-robin fashion or using a custom defined function**.
+* **Consumer**: Consumers are the applications or processes that subscribe to topics and process the feed of published messages. 
 
 ![](.kafka-intro_images/we_saw_world.png)
 
@@ -75,4 +83,4 @@
 * Consumers in one consumer group get different set of data from brokers
 * Lots of partitions allows add more consumers
 * Data is replicated to different consumer groups (ML + OLAP target should belongs 2 different consumer groups)
-* 
+
