@@ -29,7 +29,7 @@ object SimpleCounter {
     }
 
     val startTime = System.currentTimeMillis()
-    for (i <- 1 until count) {
+    for (i <- 1 to count) {
       producer.produce(i.toString)
       Thread.sleep(delay)
     }
@@ -37,6 +37,7 @@ object SimpleCounter {
     println(s"We are done, took ${endTime - startTime}ms")
     producer.produce(s"We are done, took ${endTime - startTime}ms")
 
+    // flush the memory buffer, in case any message loss, !!!IMPORTANT!!!
     producer.close()
 
     sys.exit(0)
