@@ -1,0 +1,5 @@
+{
+    "kafka_path": "/home/zhenglai/install/kafka_2.11-0.10.0.0",
+    "log_path": "/home/zhenglai/data/kafka-logs",
+    "zk_path": "vm01:2181,vm02:2181,vm03:2181"
+    }
