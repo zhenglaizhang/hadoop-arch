@@ -11,16 +11,26 @@ import scala.concurrent.ExecutionException
   */
 class DemoProducerNew(topic: String, brokerList: String, sync: String) extends DemoProducer {
 
-  val kafkaProps = new Properties()
+  val kafkaProps: Properties = new Properties()
 
   // mandatory, even though we don't send keys
+  kafkaProps.put("bootstrap.servers", brokerList)
   kafkaProps.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+  kafkaProps.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   kafkaProps.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   kafkaProps.put("acks", "1")
 
   //  how many times to return when produce request fails
   kafkaProps.put("retries", "3")
-  kafkaProps.put("linger.ms", 5)
+
+  /*
+  By default a buffer is available to send immediately even if there is additional unused space in the buffer. However if you want to reduce the number of requests you can set linger.ms to something greater than 0. This will instruct the producer to wait up to that number of milliseconds before sending a request in hope that more records will arrive to fill up the same batch. This is analogous to Nagle's algorithm in TCP.
+
+  However this setting would add some of latency to our request waiting for more records to arrive if we didn't fill up the buffer. Note that records that arrive close together in time will generally batch together even with linger.ms=0 so under heavy load batching will occur regardless of the linger configuration; however setting this to something larger than 0 can lead to fewer, more efficient requests when not under maximal load at the cost of a small amount of latency.
+   */
+  //  kafkaProps.put("linger.ms", 5)
+  // [ERROR] /Users/Zhenglai/git/hadoop-arch/src/main/scala/net/zhenglai/kafka/DemoProducerNew.scala:29: error: the result type of an implicit conversion must be more specific than AnyRef
+  //    [ERROR]   kafkaProps.put("linger.ms", 5)
 
   val producer = new KafkaProducer[String, String](kafkaProps)
 

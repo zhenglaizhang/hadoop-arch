@@ -10,7 +10,7 @@ object ClusterMonitor {
   val membershipRoot = "/net.zhenglai.zk.cm.Members"
 }
 
-class ClusterMonitor(val host: String, val port: String) extends Runnable {
+class ClusterMonitor(val host: String, val port: String) {
 
 
   val connectionManager = new Watcher {
@@ -30,7 +30,7 @@ class ClusterMonitor(val host: String, val port: String) extends Runnable {
         try {
           val children = zk.getChildren(ClusterMonitor.membershipRoot, this)
           wall("!!!Cluster Membership Change!!!")
-          wall($"Members: $children")
+          wall(s"Members: $children")
         } catch {
           case e: KeeperException ⇒
             throw new RuntimeException(e)

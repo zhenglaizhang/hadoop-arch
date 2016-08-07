@@ -10,6 +10,7 @@ object SimpleCounter {
       case 0 => println("SimpleCounter {broker-list} {topic} {type old/new} {type sync/async} " +
         "{delay (ms)} {count}")
         sys.exit(1)
+      case _ => None
     }
 
 
