@@ -22,6 +22,7 @@ Messages are retained by the Kafka cluster in a well-defined manner for each top
 * the ability of Kafka to handle multiple producers and multiple consumers for each topic is important
 * At the busiest times of day, we are receiving over 13 million messages per second, or 2.75 gigabytes of data per second. 
 * LinkedIn runs over 1100 Kafka brokers organized into more than 60 clusters.
+* by 2016, it currently handles more than 1.4 trillion messages per day across over 1400 brokers. Kafka’s strong durability and low latency 
 
 
 ---
@@ -68,3 +69,28 @@ the consumer library takes care of fetching schemas from the registry and deseri
 
 >Kafka as a Service at LinkedIn
 ![](.kafka_at_scale_images/kafka_as_service.png)
+
+
+---
+
+![](.kafka_at_scale_images/linkedin_kafka_arch.png)
+
+
+### Core Kafka Services
+
+Kafka Brokers
+  
+Kafka Mirror-Maker
+mirror-maker enables us to make copies of clusters by consuming from a source cluster and producing into a target cluster
+
+
+Schema Registry
+
+* So each producer encodes Avro data, registers Avro schemas in the schema registry and embeds a schema-ID in each serialized message. 
+* Consumers fetch the schema corresponding to the ID from the schema registry service in order to deserialize the Avro messages.
+
+
+Kafka REST Proxy
+
+
+
