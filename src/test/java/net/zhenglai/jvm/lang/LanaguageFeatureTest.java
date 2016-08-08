@@ -1,13 +1,9 @@
 package net.zhenglai.jvm.lang;
 
-import cascading.operation.assertion.AssertEquals;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by Zhenglai on 8/8/16.
- */
 public class LanaguageFeatureTest {
 
     @Test
