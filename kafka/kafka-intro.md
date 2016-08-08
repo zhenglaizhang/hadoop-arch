@@ -1,6 +1,8 @@
 
 ## Apache Kafka publisher-subscriber messaging system
 
+###  Apache Kafka, the open standard for streaming data
+
 * **Topic**: A topic is **a category or feed name** to which messages are published by the message producers. In Kafka, **topics are partitioned** and each partition is represented by the **ordered immutable sequence of messages**. A Kafka cluster maintains the partitioned log for each topic. Each message in the partition is assigned **a unique sequential ID called the offset**.
 * **Broker**: _A Kafka cluster consists of one or more servers where each one may have one or more server processes running and is called the broker_. Topics are created within the context of broker processes.
 * **Zookeeper**: ZooKeeper serves as the coordination interface between the Kafka broker and consumers.
