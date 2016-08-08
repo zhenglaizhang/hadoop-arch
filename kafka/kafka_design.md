@@ -175,4 +175,93 @@ So effectively Kafka guarantees at-least-once delivery by default and allows the
 * **Producers, on the other hand, have the option of either waiting for the message to be committed or not, depending on their preference for tradeoff between latency and durability**
 * **The guarantee that Kafka offers is that a committed message will not be lost, as long as there is at least one in sync replica alive, at all times.**
 * Kafka will remain available in the presence of node failures after a **short fail-over perio**d, but may not remain available in the presence of network partitions.
+   
     
+## Replicated Logs: Quorums, ISRs, and State Machines (Oh my!)
+
+* At its heart **a Kafka partition is a replicated log**
+* A replicated log models the process of coming into consensus on the order of a series of values
+* the simplest and fastest is with a leader who chooses the ordering of values provided to it.
+* The fundamental guarantee a log replication algorithm must provide is that if we tell the client a message is committed, and the leader fails, the new leader we elect must also have that message.
+* Tradeoff: if the leader waits for more followers to acknowledge a message before declaring it committed then there will be more potentially electable leaders.
+* A common approach to this tradeoff is to use a majority vote for both the commit decision and the leader election.
+* This majority vote approach has a very nice property: the latency is dependent on only the fastest servers. That is, if the replication factor is three, the latency is determined by the faster slave not the slower one.
+* quorum algorithms more commonly appear for shared cluster configuration such as ZooKeeper but are less common for primary data storage. For example in HDFS the namenode's high-availability feature is built on a majority-vote-based journal, but this more expensive approach is not used for the data itself.
+
+> Let's say we have 2f+1 replicas. If f+1 replicas must receive a message prior to a commit being declared by the leader, and if we elect a new leader by electing the follower with the most complete log from at least f+1 replicas, then, with no more than f failures, the leader is guaranteed to have all committed messages. This is because among any f+1 replicas, there must be at least one replica that contains all committed messages. That replica's log will be the most complete and therefore will be selected as the new leader
+
+>This majority vote approach has a very nice property: the latency is dependent on only the fastest servers. That is, if the replication factor is three, the latency is determined by the faster slave not the slower one.
+
+> The downside of majority vote is that it doesn't take many failures to leave you with no electable leaders
+
+Kafka takes a slightly different approach to choosing its quorum set. Instead of majority vote, Kafka dynamically maintains a set of in-sync replicas (ISR) that are caught-up to the leader. Only members of this set are eligible for election as leader. A write to a Kafka partition is not considered committed until all in-sync replicas have received the write. This ISR set is persisted to ZooKeeper whenever it changes. 
+
+This is an important factor for Kafka's usage model where there are many partitions and ensuring leadership balance is important. With this ISR model and f+1 replicas, a Kafka topic can tolerate f failures without losing committed messages.
+
+
+* Another important design distinction is that **Kafka does not require that crashed nodes recover with all their data intact.**
+* Our protocol for allowing a replica to rejoin the ISR ensures that before rejoining, it must fully re-sync again even if it lost unflushed data in its crash.
+
+### Unclean leader election: What if they all die?
+
+* Note that Kafka's guarantee with respect to data loss is predicated on at least one replica remaining in sync. If all the nodes replicating a partition die, this guarantee no longer holds.
+* There are two behaviors that could be implemented:
+  
+    * Wait for a replica in the ISR to come back to life and choose this replica as the leader (hopefully it still has all its data). 
+    * Choose the first replica (not necessarily in the ISR) that comes back to life as the leader.
+
+
+### Availability and Durability Guarantees
+
+* When writing to Kafka, producers can choose whether they wait for the message to be acknowledged by 0,1 or all (-1) replicas.
+* By default, when acks=all, acknowledgement happens as soon as all the current in-sync replicas have received the message.
+
+
+### Replica Management
+
+* balance partitions within a cluster in a round-robin fashion to avoid clustering all partitions for high-volume topics on a small number of nodes. 
+* Likewise we try to balance leadership so that each node is the leader for a proportional share of its partitions.
+*  A naive implementation of leader election would end up running an election per partition for all partitions a node hosted when that node failed. Instead, we elect one of the brokers as the "controller". This controller detects failures at the broker level
+*  batch together many of the required leadership change notifications which makes the election process far cheaper and faster for a large number of partitions
+  
+ 
+## Log Compaction
+
+* Log compaction ensures that Kafka will always retain at least the last known value for each message key within the log of data for a single topic partition.
+* data retention where old log data is discarded after a fixed period of time or when the log reaches some predetermined size => works well for temporal event data such as logging where each record stands alone.
+* an important class of data streams are the log of changes to keyed, mutable data
+* Say we have a topic containing user email addresses; every time a user updates their email address we send a message to this topic using their user id as the primary key.
+* Log compaction gives us a more granular retention mechanism so that we are guaranteed to retain at least the last update for each primary key
+* we guarantee that the log contains a full snapshot of the final value for every key not just keys that changed recently.
+* Log compaction is a mechanism to give finer-grained per-record retention, rather than the coarser-grained time-based retention. The idea is to selectively remove records where we have a more recent update with the same primary key. This way the log is guaranteed to have at least the last state for each key.
+* Kafka acts as a source-of-truth store so it is useful even in situations where the upstream data source would not otherwise be replayable.
+
+![](.kafka_design_images/log.png)
+
+The head of the log is identical to a traditional Kafka log. It has dense, sequential offsets and retains all messages. Log compaction adds an option for handling the tail of the log. The picture above shows a log with a compacted tail.
+
+* the messages in the tail of the log retain the original offset assigned when they were first written—that never changes.
+* this position is indistinguishable from the next highest offset that does appear in the log.
+* Compaction also allows for deletes. A message with **a key and a null payload** will be treated as a delete from the log. 
+* The compaction is done in the background by periodically **recopying log segments**. Cleaning does not block reads and can be **throttled**
+
+![](.kafka_design_images/log_compaction.png)
+
+Log compaction guarantees the following:
+
+* Ordering of messages is always maintained
+* The offset for a message never changes.
+* Any read progressing from offset 0 will see at least the final state of all records in the order they were written
+
+
+#### Log Compaction Details
+
+Log compaction is handled by the log cleaner, a pool of background threads that recopy log segment files, removing records whose key appears in the head of the log.
+
+
+### Quotas
+
+
+* Quotas are basically byte-rate thresholds defined per client-id.
+* 
+
