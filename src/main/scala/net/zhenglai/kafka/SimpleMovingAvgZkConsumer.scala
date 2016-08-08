@@ -54,8 +54,8 @@ class SimpleMovingAvgZkConsumer(zkUrl: String, groupId: String, topic: String, w
 
     // notice the difference with imperative programming here!
     while ( {
-      next = getNextMessage()
-      line != null
+      next = getNextMessage
+      next != null
     }) {
       var sum = 0
 
@@ -73,7 +73,7 @@ class SimpleMovingAvgZkConsumer(zkUrl: String, groupId: String, topic: String, w
       }
 
       if (buffer.size() > 0) {
-        println(s"Moving average is: ${sum / buffer.size()}")
+        println(s"Moving average is: ${sum / buffer.size().toFloat}")
       }
 
       // uncomment if you want to commit offsets on every message
@@ -84,15 +84,14 @@ class SimpleMovingAvgZkConsumer(zkUrl: String, groupId: String, topic: String, w
     sys.exit(0)
   }
 
-  def getNextMessage(): String = {
+  def getNextMessage: String = {
     val it = stream.iterator()
     try {
       it.next().message()
     } catch {
-      case e: ConsumerTimeoutException => {
+      case e: ConsumerTimeoutException =>
         println(s"Waited $waitTime and no message arrived.")
         null
-      }
     }
 
   }
