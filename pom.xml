@@ -42,6 +42,10 @@
             <id>conjars.org</id>
             <url>http://conjars.org/repo</url>
         </repository>
+        <repository>
+            <id>lib</id>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
     </repositories>
     <dependencies>
         <!--<dependency>-->
@@ -206,6 +210,13 @@
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka_2.11</artifactId>
             <version>0.10.0.0</version>
+        </dependency>
+
+        <!--Classifier4J installed locally-->
+        <dependency>
+            <groupId>net.sf</groupId>
+            <artifactId>classifier4J</artifactId>
+            <version>0.6</version>
         </dependency>
 
     </dependencies>

@@ -30,3 +30,7 @@ HADOOP_ROOT_LOGGER=DEBUG,console hadoop fs -text /foo/bar
 
 export HADOOP_ROOT_LOGGER=DEBUG,console
 hadoop checknative
+
+
+
+mvn install:install-file -Dfile=/Volumes/ramdisk/Zhenglai/hadoop-arch/lib/Classifier4J-0.6.jar -DgroupId=net.sf -DartifactId=classifier4J -Dversion=0.6 -Dpackaging=jar -DlocalRepositoryPath=/Volumes/ramdisk/Zhenglai/hadoop-arch/lib
