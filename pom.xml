@@ -14,6 +14,9 @@
 
     <!--SNAPSHOT designator in a version, which indicates that a project is in a state of development-->
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>mr-jobs</module>
+    </modules>
 
     <!--display name used for the project. This is often used in Maven's generated documentation.-->
     <name>Hadoop Architecture</name>
@@ -22,7 +25,7 @@
     <url>http://www.zhenglaizhang.net</url>
 
     <!--This element indicates the package type to be used by this artifact (e.g. JAR, WAR, EAR, etc.).-->
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
 
     <properties>

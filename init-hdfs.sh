@@ -1,6 +1,7 @@
+#!/usr/bin/env bash
 hdfs namenode -format
 hdfs dfs -ls /
-hdfs dfs -mkdir -p /user/Zhenglai
+hdfs dfs -mkdir -p /user/zhenglai
 hdfs dfs -mkdir -p /etc
 hdfs dfs -mkdir -p /tmp
 hdfs dfs -mkdir -p /data
@@ -13,6 +14,10 @@ hdfs dfs -put 1902 /data/ncdc
 hdfs dfs -put 1901.gz /data/ncdc/
 
 hdfs dfs -cat /data/ncdc/1901
+
+
+echo "to be or not to be" > words
+hdfs dfs -copyFromLocal words /user/zhenglai/words
 
 
 # verify hadoop startup
